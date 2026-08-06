@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:carrot", "minecraft:carrot", "minecraft:carrot",
+    "minecraft:carrot", "minecraft:carrot", "minecraft:carrot",
+    "minecraft:carrot", "minecraft:carrot", "minecraft:carrot"
+  ],
+  "result": {
+    "id": "greenward:gilded_carrot",
+    "count": 1
+  }
+}

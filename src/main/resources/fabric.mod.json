@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "greenward",
+  "version": "${version}",
+  "name": " Greenward",
+  "description": "Right-click hoe harvest with tier-scaling radius.",
+  "authors": ["Sawyer"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.green.ward.Greenward"]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "~26.2",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

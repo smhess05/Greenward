@@ -1,0 +1,47 @@
+plugins {
+    // NOTE: since 26.1, Minecraft is UN-obfuscated, so we use the new
+    // 'net.fabricmc.fabric-loom' plugin that does NOT remap. This is the
+    // single biggest future-proofing change — no more Yarn mapping churn.
+    id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT'
+    id 'java'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    maven { url = "https://maven.fabricmc.net/" }
+    mavenCentral()
+}
+
+dependencies {
+    // Post-26.1: Minecraft is already un-obfuscated and no explicit mappings line is required.
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+
+    // Post-26.1: plain 'implementation', NOT 'modImplementation'.
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+// Fill mod metadata placeholders in fabric.mod.json from gradle.properties.
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+// Post-26.1: 'jar', NOT 'remapJar'.
+jar {
+    from("LICENSE") { rename { "${it}_${project.archives_base_name}" } }
+}

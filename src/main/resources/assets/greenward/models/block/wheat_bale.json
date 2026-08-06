@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "greenward:block/wheat_bale_top",
+    "side": "greenward:block/wheat_bale_side"
+  }
+}

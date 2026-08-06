@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:wheat_sheaf", "greenward:wheat_sheaf", "greenward:wheat_sheaf",
+    "greenward:wheat_sheaf", "greenward:wheat_sheaf", "greenward:wheat_sheaf",
+    "greenward:wheat_sheaf", "greenward:wheat_sheaf", "greenward:wheat_sheaf"
+  ],
+  "result": {
+    "id": "greenward:wheat_bale",
+    "count": 1
+  }
+}
