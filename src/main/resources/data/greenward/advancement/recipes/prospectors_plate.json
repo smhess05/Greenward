@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_diamond": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:diamond"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_diamond"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:prospectors_plate"
+    ]
+  }
+}

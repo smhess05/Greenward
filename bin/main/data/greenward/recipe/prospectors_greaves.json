@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IDI",
+    "I I",
+    "I I"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "D": "minecraft:diamond"
+  },
+  "result": {
+    "id": "greenward:prospectors_greaves",
+    "count": 1
+  }
+}

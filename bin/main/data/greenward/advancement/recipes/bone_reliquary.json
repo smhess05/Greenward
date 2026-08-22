@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_bone_bundle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:bone_bundle"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_bone_bundle"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:bone_reliquary"
+    ]
+  }
+}

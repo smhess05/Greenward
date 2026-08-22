@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "S S",
+    "L L"
+  ],
+  "key": {
+    "S": "greenward:wheat_sheaf",
+    "L": "minecraft:leather"
+  },
+  "result": {
+    "id": "greenward:harvesters_boots",
+    "count": 1
+  }
+}

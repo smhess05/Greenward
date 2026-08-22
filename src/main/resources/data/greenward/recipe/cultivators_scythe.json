@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WPW",
+    " R ",
+    " R "
+  ],
+  "key": {
+    "W": "greenward:wheat_bale",
+    "P": "greenward:potato_sack",
+    "R": "minecraft:stick"
+  },
+  "result": {
+    "id": "greenward:cultivators_scythe",
+    "count": 1
+  }
+}

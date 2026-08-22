@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:gilded_carrot"
+  ],
+  "result": {
+    "id": "minecraft:carrot",
+    "count": 9
+  }
+}

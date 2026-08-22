@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:deep_sea_rod",
+    "minecraft:heart_of_the_sea",
+    "minecraft:nautilus_shell",
+    "minecraft:nautilus_shell",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals"
+  ],
+  "result": {
+    "id": "greenward:leviathan_rod",
+    "count": 1
+  }
+}

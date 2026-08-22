@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WPW",
+    "W W",
+    "W W"
+  ],
+  "key": {
+    "W": "greenward:wheat_bale",
+    "P": "greenward:potato_sack"
+  },
+  "result": {
+    "id": "greenward:cultivators_leggings",
+    "count": 1
+  }
+}

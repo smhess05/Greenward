@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "P P",
+    "   "
+  ],
+  "key": {
+    "P": "minecraft:prismarine_shard"
+  },
+  "result": {
+    "id": "greenward:anglers_cap",
+    "count": 1
+  }
+}

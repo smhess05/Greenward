@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DOD",
+    "OEO",
+    "DOD"
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "O": "minecraft:obsidian",
+    "E": "minecraft:emerald"
+  },
+  "result": {
+    "id": "greenward:ascension_template",
+    "count": 2
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CDC",
+    "C C",
+    "C C"
+  ],
+  "key": {
+    "C": "greenward:cobble_monolith",
+    "D": "greenward:deepslate_cluster"
+  },
+  "result": {
+    "id": "greenward:excavators_greaves",
+    "count": 1
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cobble_cluster": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:cobble_cluster"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cobble_cluster"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:cobble_monolith"
+    ]
+  }
+}

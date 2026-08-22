@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:cobble_cluster",
+    "greenward:cobble_cluster",
+    "greenward:cobble_cluster",
+    "greenward:cobble_cluster",
+    "greenward:cobble_cluster",
+    "greenward:cobble_cluster",
+    "greenward:cobble_cluster",
+    "greenward:cobble_cluster",
+    "greenward:cobble_cluster"
+  ],
+  "result": {
+    "id": "greenward:cobble_monolith",
+    "count": 1
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:deepslate_cluster",
+    "greenward:deepslate_cluster",
+    "greenward:deepslate_cluster",
+    "greenward:deepslate_cluster",
+    "greenward:deepslate_cluster",
+    "greenward:deepslate_cluster",
+    "greenward:deepslate_cluster",
+    "greenward:deepslate_cluster",
+    "greenward:deepslate_cluster"
+  ],
+  "result": {
+    "id": "greenward:deepslate_monolith",
+    "count": 1
+  }
+}

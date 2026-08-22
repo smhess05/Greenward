@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block"
+  ],
+  "result": {
+    "id": "greenward:kelp_reef",
+    "count": 1
+  }
+}

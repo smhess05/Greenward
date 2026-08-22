@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals",
+    "minecraft:nautilus_shell",
+    "minecraft:nautilus_shell",
+    "minecraft:nautilus_shell",
+    "minecraft:nautilus_shell",
+    "minecraft:heart_of_the_sea"
+  ],
+  "result": {
+    "id": "greenward:abyssal_pearl",
+    "count": 1
+  }
+}

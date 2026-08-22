@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " H ",
+    "D P",
+    " R "
+  ],
+  "key": {
+    "H": "greenward:golden_harvest",
+    "D": "greenward:deepstone_core",
+    "P": "greenward:abyssal_pearl",
+    "R": "greenward:reapers_core"
+  },
+  "result": {
+    "id": "greenward:godly_catalyst",
+    "count": 1
+  }
+}

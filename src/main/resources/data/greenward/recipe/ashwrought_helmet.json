@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " R ",
+    "R R",
+    "   "
+  ],
+  "key": {
+    "R": "greenward:bone_reliquary"
+  },
+  "result": {
+    "id": "greenward:ashwrought_helmet",
+    "count": 1
+  }
+}

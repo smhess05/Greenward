@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:bone_bundle",
+    "greenward:bone_bundle",
+    "greenward:bone_bundle",
+    "greenward:bone_bundle",
+    "greenward:bone_bundle",
+    "greenward:bone_bundle",
+    "greenward:bone_bundle",
+    "greenward:bone_bundle",
+    "greenward:bone_bundle"
+  ],
+  "result": {
+    "id": "greenward:bone_reliquary",
+    "count": 1
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "moisture=0": { "model": "greenward:block/dry_fertilized_farmland" },
+    "moisture=1": { "model": "greenward:block/dry_fertilized_farmland" },
+    "moisture=2": { "model": "greenward:block/dry_fertilized_farmland" },
+    "moisture=3": { "model": "greenward:block/dry_fertilized_farmland" },
+    "moisture=4": { "model": "greenward:block/dry_fertilized_farmland" },
+    "moisture=5": { "model": "greenward:block/dry_fertilized_farmland" },
+    "moisture=6": { "model": "greenward:block/dry_fertilized_farmland" },
+    "moisture=7": { "model": "greenward:block/fertilized_farmland" }
+  }
+}

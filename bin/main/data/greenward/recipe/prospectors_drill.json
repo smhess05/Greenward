@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DID",
+    " R ",
+    " R "
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "I": "minecraft:iron_ingot",
+    "R": "minecraft:stick"
+  },
+  "result": {
+    "id": "greenward:prospectors_drill",
+    "count": 1
+  }
+}

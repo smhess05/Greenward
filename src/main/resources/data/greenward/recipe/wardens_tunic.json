@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "greenward:ascension_template",
+  "base": "greenward:cultivators_tunic",
+  "addition": "greenward:harvest_core",
+  "result": {
+    "id": "greenward:wardens_tunic"
+  }
+}

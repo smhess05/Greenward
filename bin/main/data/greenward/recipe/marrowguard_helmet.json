@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "B B",
+    "   "
+  ],
+  "key": {
+    "B": "greenward:bone_bundle"
+  },
+  "result": {
+    "id": "greenward:marrowguard_helmet",
+    "count": 1
+  }
+}

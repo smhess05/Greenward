@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "PPP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:potato"
+  },
+  "result": {
+    "id": "greenward:potato_sack",
+    "count": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "greenward:ascension_template",
+  "base": "greenward:cultivators_scythe",
+  "addition": "greenward:harvest_core",
+  "result": {
+    "id": "greenward:harvest_warden"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:powder_satchel",
+    "greenward:powder_satchel",
+    "greenward:powder_satchel",
+    "greenward:powder_satchel",
+    "greenward:powder_satchel",
+    "greenward:powder_satchel",
+    "greenward:powder_satchel",
+    "greenward:powder_satchel",
+    "greenward:powder_satchel"
+  ],
+  "result": {
+    "id": "greenward:powder_cache",
+    "count": 1
+  }
+}

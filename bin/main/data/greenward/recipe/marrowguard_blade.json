@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BR ",
+    " S ",
+    " S "
+  ],
+  "key": {
+    "B": "greenward:bone_bundle",
+    "R": "greenward:bone_reliquary",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "greenward:marrowguard_blade",
+    "count": 1
+  }
+}

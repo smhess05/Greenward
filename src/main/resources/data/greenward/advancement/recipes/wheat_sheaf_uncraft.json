@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_wheat_bale": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "greenward:wheat_bale" }] }
+    }
+  },
+  "requirements": [["has_wheat_bale"]],
+  "rewards": { "recipes": ["greenward:wheat_sheaf_uncraft"] }
+}

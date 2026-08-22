@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_harvest_core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:harvest_core"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_harvest_core"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:wardens_tunic"
+    ]
+  }
+}

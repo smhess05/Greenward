@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:cod_shoal",
+    "greenward:kelp_reef",
+    "minecraft:heart_of_the_sea"
+  ],
+  "result": {
+    "id": "greenward:leviathans_heart",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSB",
+    " R ",
+    " R "
+  ],
+  "key": {
+    "S": "greenward:wheat_sheaf",
+    "B": "greenward:wheat_bale",
+    "R": "minecraft:stick"
+  },
+  "result": {
+    "id": "greenward:harvesters_scythe",
+    "count": 1
+  }
+}

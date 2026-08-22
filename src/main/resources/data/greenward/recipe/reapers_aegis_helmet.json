@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "greenward:ascension_template",
+  "base": "greenward:ashwrought_helmet",
+  "addition": "greenward:reapers_core",
+  "result": {
+    "id": "greenward:reapers_aegis_helmet"
+  }
+}

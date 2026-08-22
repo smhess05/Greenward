@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C C",
+    "CKC",
+    "CCC"
+  ],
+  "key": {
+    "C": "greenward:cod_shoal",
+    "K": "minecraft:dried_kelp_block"
+  },
+  "result": {
+    "id": "greenward:tidal_coat",
+    "count": 1
+  }
+}

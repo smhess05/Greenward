@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_bone_meal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "minecraft:bone_meal" }] }
+    }
+  },
+  "requirements": [["has_bone_meal"]],
+  "rewards": { "recipes": ["greenward:fertilizer"] }
+}

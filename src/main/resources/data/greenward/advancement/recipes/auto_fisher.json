@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fishing_rod": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "minecraft:fishing_rod" }] }
+    }
+  },
+  "requirements": [["has_fishing_rod"]],
+  "rewards": { "recipes": ["greenward:auto_fisher"] }
+}

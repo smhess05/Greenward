@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=false": { "model": "greenward:block/auto_harvester" },
+    "lit=true": { "model": "greenward:block/auto_harvester_lit" }
+  }
+}

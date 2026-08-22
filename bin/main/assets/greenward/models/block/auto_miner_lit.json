@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "greenward:block/auto_miner_top",
+    "side": "greenward:block/auto_miner_side",
+    "front": "greenward:block/auto_miner_front_lit"
+  }
+}

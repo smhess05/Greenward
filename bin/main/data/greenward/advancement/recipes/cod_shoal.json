@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cod_school": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:cod_school"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cod_school"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:cod_shoal"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_potato": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:potato"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_potato"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:potato_sack"
+    ]
+  }
+}

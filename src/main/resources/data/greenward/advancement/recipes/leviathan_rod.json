@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_deep_sea_rod": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:deep_sea_rod"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_deep_sea_rod"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:leviathan_rod"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:bone_reliquary",
+    "greenward:powder_cache",
+    "minecraft:ender_pearl"
+  ],
+  "result": {
+    "id": "greenward:reapers_core",
+    "count": 1
+  }
+}

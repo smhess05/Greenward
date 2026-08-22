@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "R R",
+    " P ",
+    "R R"
+  ],
+  "key": {
+    "R": "greenward:bone_reliquary",
+    "P": "greenward:powder_satchel"
+  },
+  "result": {
+    "id": "greenward:ashwrought_leggings",
+    "count": 1
+  }
+}

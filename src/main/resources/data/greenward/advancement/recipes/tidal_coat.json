@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cod_shoal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:cod_shoal"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cod_shoal"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:tidal_coat"
+    ]
+  }
+}

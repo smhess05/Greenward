@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:wheat_bale",
+    "greenward:potato_crate",
+    "greenward:radiant_carrot"
+  ],
+  "result": {
+    "id": "greenward:harvest_core",
+    "count": 1
+  }
+}

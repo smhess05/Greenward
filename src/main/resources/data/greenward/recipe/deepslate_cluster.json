@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobbled_deepslate"
+  ],
+  "result": {
+    "id": "greenward:deepslate_cluster",
+    "count": 1
+  }
+}

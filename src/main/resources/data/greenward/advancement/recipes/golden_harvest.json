@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_golden_carrot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:golden_carrot"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_golden_carrot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:golden_harvest"
+    ]
+  }
+}

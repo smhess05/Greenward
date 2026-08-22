@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=false": { "model": "greenward:block/auto_fisher" },
+    "lit=true": { "model": "greenward:block/auto_fisher_lit" }
+  }
+}

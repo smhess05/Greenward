@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_dried_kelp_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:dried_kelp_block"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dried_kelp_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:kelp_reef"
+    ]
+  }
+}

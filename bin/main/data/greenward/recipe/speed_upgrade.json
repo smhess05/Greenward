@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GRG",
+    "RSR",
+    "GRG"
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "R": "minecraft:redstone",
+    "S": "minecraft:sugar"
+  },
+  "result": { "id": "greenward:speed_upgrade", "count": 1 }
+}

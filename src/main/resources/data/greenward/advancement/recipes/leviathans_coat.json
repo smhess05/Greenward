@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_leviathans_heart": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:leviathans_heart"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_leviathans_heart"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:leviathans_coat"
+    ]
+  }
+}

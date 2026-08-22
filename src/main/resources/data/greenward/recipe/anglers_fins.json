@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "P P",
+    "T T"
+  ],
+  "key": {
+    "P": "minecraft:prismarine_shard",
+    "T": "minecraft:turtle_scute"
+  },
+  "result": {
+    "id": "greenward:anglers_fins",
+    "count": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_radiant_carrot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "greenward:radiant_carrot" }] }
+    }
+  },
+  "requirements": [["has_radiant_carrot"]],
+  "rewards": { "recipes": ["greenward:radiant_carrot_uncraft"] }
+}

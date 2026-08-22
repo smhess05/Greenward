@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ODO",
+    "DND",
+    "ODO"
+  ],
+  "key": {
+    "O": "minecraft:obsidian",
+    "D": "minecraft:diamond",
+    "N": "minecraft:netherite_scrap"
+  },
+  "result": {
+    "id": "greenward:deepstone_core",
+    "count": 1
+  }
+}

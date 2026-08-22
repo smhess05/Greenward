@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "greenward:auto_harvester",
+    "greenward:auto_miner",
+    "greenward:auto_fisher"
+  ]
+}

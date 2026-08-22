@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:cod",
+    "minecraft:cod",
+    "minecraft:cod",
+    "minecraft:cod",
+    "minecraft:cod",
+    "minecraft:cod",
+    "minecraft:cod",
+    "minecraft:cod",
+    "minecraft:cod"
+  ],
+  "result": {
+    "id": "greenward:cod_school",
+    "count": 1
+  }
+}

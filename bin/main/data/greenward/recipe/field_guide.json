@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "PWP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "W": "greenward:wheat_sheaf"
+  },
+  "result": { "id": "greenward:field_guide", "count": 1 }
+}

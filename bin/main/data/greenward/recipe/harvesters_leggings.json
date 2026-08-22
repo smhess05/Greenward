@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SLS",
+    "S S",
+    "S S"
+  ],
+  "key": {
+    "S": "greenward:wheat_sheaf",
+    "L": "minecraft:leather"
+  },
+  "result": {
+    "id": "greenward:harvesters_leggings",
+    "count": 1
+  }
+}

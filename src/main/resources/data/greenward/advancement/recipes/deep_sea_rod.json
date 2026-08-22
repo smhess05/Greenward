@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_anglers_line": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:anglers_line"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_anglers_line"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:deep_sea_rod"
+    ]
+  }
+}

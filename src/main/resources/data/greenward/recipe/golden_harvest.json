@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BPB",
+    "P P",
+    "BPB"
+  ],
+  "key": {
+    "B": "greenward:wheat_bale",
+    "P": "greenward:potato_crate"
+  },
+  "result": {
+    "id": "greenward:golden_harvest",
+    "count": 1
+  }
+}

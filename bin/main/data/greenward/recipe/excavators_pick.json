@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CDC",
+    " R ",
+    " R "
+  ],
+  "key": {
+    "C": "greenward:cobble_monolith",
+    "D": "greenward:deepslate_cluster",
+    "R": "minecraft:stick"
+  },
+  "result": {
+    "id": "greenward:excavators_pick",
+    "count": 1
+  }
+}

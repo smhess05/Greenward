@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_wheat_sheaf": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:wheat_sheaf"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_wheat_sheaf"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:harvesters_boots"
+    ]
+  }
+}

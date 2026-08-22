@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:anglers_line",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals",
+    "minecraft:nautilus_shell"
+  ],
+  "result": {
+    "id": "greenward:deep_sea_rod",
+    "count": 1
+  }
+}

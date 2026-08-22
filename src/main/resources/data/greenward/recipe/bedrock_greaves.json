@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "greenward:ascension_template",
+  "base": "greenward:excavators_greaves",
+  "addition": "greenward:bedrock_core",
+  "result": {
+    "id": "greenward:bedrock_greaves"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_deepslate_cluster": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:deepslate_cluster"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_deepslate_cluster"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:deepslate_monolith"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  P",
+    " PT",
+    "P T"
+  ],
+  "key": {
+    "P": "minecraft:prismarine_shard",
+    "T": "minecraft:string"
+  },
+  "result": {
+    "id": "greenward:anglers_line",
+    "count": 1
+  }
+}

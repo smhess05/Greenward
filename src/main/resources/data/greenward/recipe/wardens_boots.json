@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "greenward:ascension_template",
+  "base": "greenward:cultivators_boots",
+  "addition": "greenward:harvest_core",
+  "result": {
+    "id": "greenward:wardens_boots"
+  }
+}

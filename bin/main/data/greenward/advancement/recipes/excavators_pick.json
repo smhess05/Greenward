@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cobble_monolith": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:cobble_monolith"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cobble_monolith"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:excavators_pick"
+    ]
+  }
+}

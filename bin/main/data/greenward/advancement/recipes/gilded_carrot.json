@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_carrot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "minecraft:carrot" }] }
+    }
+  },
+  "requirements": [["has_carrot"]],
+  "rewards": { "recipes": ["greenward:gilded_carrot"] }
+}

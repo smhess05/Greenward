@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:cobble_monolith",
+    "greenward:deepslate_monolith",
+    "minecraft:amethyst_shard"
+  ],
+  "result": {
+    "id": "greenward:bedrock_core",
+    "count": 1
+  }
+}

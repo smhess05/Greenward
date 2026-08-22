@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_reapers_core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:reapers_core"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_reapers_core"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:reapers_aegis_chestplate"
+    ]
+  }
+}

@@ -15,17 +15,14 @@ import java.util.function.Function;
 
 public class ModBlocks {
 
-    public static final Block WHEAT_BALE_BLOCK = register("wheat_bale",
-    properties -> new Block(properties), 
-    BlockBehaviour.Properties.of()
-        .sound(SoundType.GRASS));
+    // Non-final, assigned conditionally in initialize() so a disabled feature flag
+    // simply leaves the field null instead of registering.
+    public static Block WHEAT_BALE_BLOCK;
+    public static Block FERTILIZED_FARMLAND;
 
-    public static final Block FERTILIZED_FARMLAND = register("fertilized_farmland",
-    FertilizedFarmlandBlock::new,
-    BlockBehaviour.Properties.of()
-        .strength(0.6f)
-        .sound(SoundType.GRAVEL)
-        .randomTicks());
+    public static Block AUTO_HARVESTER;
+    public static Block AUTO_MINER;
+    public static Block AUTO_FISHER;
 
     public static Block register(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {
         // Two keys: one for the BLOCK registry, one for the ITEM registry.
@@ -43,5 +40,44 @@ public class ModBlocks {
         return block;
     }
 
-    public static void initialize() { }
+    public static void initialize() {
+        if (GreenwardConfig.ENABLE_WHEAT_COMPRESSION) {
+            WHEAT_BALE_BLOCK = register("wheat_bale",
+                    properties -> new Block(properties),
+                    BlockBehaviour.Properties.of()
+                        .sound(SoundType.GRASS));
+        }
+
+        if (GreenwardConfig.ENABLE_FERTILIZER) {
+            FERTILIZED_FARMLAND = register("fertilized_farmland",
+                    FertilizedFarmlandBlock::new,
+                    BlockBehaviour.Properties.of()
+                        .strength(0.6f)
+                        .sound(SoundType.GRAVEL)
+                        .randomTicks());
+        }
+
+        if (GreenwardConfig.ENABLE_AUTOMATION) {
+            AUTO_HARVESTER = register("auto_harvester",
+                    AutoHarvesterBlock::new,
+                    BlockBehaviour.Properties.of()
+                        .strength(3.5f)
+                        .sound(SoundType.METAL)
+                        .requiresCorrectToolForDrops());
+
+            AUTO_MINER = register("auto_miner",
+                    AutoMinerBlock::new,
+                    BlockBehaviour.Properties.of()
+                        .strength(3.5f)
+                        .sound(SoundType.METAL)
+                        .requiresCorrectToolForDrops());
+
+            AUTO_FISHER = register("auto_fisher",
+                    AutoFisherBlock::new,
+                    BlockBehaviour.Properties.of()
+                        .strength(3.5f)
+                        .sound(SoundType.METAL)
+                        .requiresCorrectToolForDrops());
+        }
+    }
 }

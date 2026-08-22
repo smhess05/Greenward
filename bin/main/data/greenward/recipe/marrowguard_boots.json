@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "   ",
+    "B S"
+  ],
+  "key": {
+    "B": "greenward:bone_bundle",
+    "S": "minecraft:string"
+  },
+  "result": {
+    "id": "greenward:marrowguard_boots",
+    "count": 1
+  }
+}

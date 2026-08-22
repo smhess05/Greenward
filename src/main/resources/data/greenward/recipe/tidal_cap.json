@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "C C",
+    "   "
+  ],
+  "key": {
+    "C": "greenward:cod_shoal"
+  },
+  "result": {
+    "id": "greenward:tidal_cap",
+    "count": 1
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_bedrock_core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:bedrock_core"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_bedrock_core"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:bedrock_greaves"
+    ]
+  }
+}

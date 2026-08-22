@@ -1,0 +1,7 @@
+{
+    "parent": "minecraft:block/farmland",
+    "textures": {
+      "top": "greenward:block/dry_fertilized_farmland_top",
+      "dirt": "minecraft:block/dirt"
+    }
+  }

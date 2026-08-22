@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "greenward:ascension_template",
+  "base": "greenward:tidal_waders",
+  "addition": "greenward:leviathans_heart",
+  "result": {
+    "id": "greenward:leviathans_waders"
+  }
+}
