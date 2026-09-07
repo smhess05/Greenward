@@ -35,17 +35,30 @@ public class AutoFisherBlockEntity extends AbstractMachineBlockEntity {
         return TICK_INTERVALS_BY_TIER;
     }
 
+    /** Independent nautilus chance for the Auto-Fisher, replacing the treasure pool it no
+     *  longer rolls — Design Program Update 4 § 4.1④. */
+    private static final float NAUTILUS_CHANCE = 0.02F;
+
+    /** Vanilla's top-level fishing table weights junk 10 / treasure 5 / fish 85. The
+     *  Auto-Fisher never rolls treasure at all (§ 4.1④ — that pool is ungated for real
+     *  player casts only, via the data-file override in {@code
+     *  data/minecraft/loot_table/gameplay/fishing.json}, and the machine must not reach
+     *  it), so it picks between just junk and fish at their original relative weights. */
+    private static final int JUNK_WEIGHT = 10;
+    private static final int FISH_WEIGHT = 85;
+
     @Override
     protected boolean doOperation(ServerLevel level, BlockPos pos, BlockState state) {
         if (!hasAdjacentWaterSource(level, pos)) {
             return false;
         }
 
-        // Roll directly against the vanilla fishing loot table instead of simulating a
-        // bobber/bite. The tool is a plain, unenchanted fishing rod, so Luck of the Sea /
-        // Lure never apply to machine catches. Because §5's data override removes the
-        // open-water gate globally, treasure is reachable here automatically.
-        LootTable table = level.getServer().reloadableRegistries().getLootTable(BuiltInLootTables.FISHING);
+        // Roll fish/junk directly instead of simulating a bobber/bite. The tool is a
+        // plain, unenchanted fishing rod, so Luck of the Sea/Lure never apply to machine
+        // catches. Treasure is deliberately excluded — see the fields above.
+        var tableKey = level.getRandom().nextInt(JUNK_WEIGHT + FISH_WEIGHT) < JUNK_WEIGHT
+                ? BuiltInLootTables.FISHING_JUNK : BuiltInLootTables.FISHING_FISH;
+        LootTable table = level.getServer().reloadableRegistries().getLootTable(tableKey);
         LootParams params = new LootParams.Builder(level)
                 .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
                 .withParameter(LootContextParams.TOOL, new ItemStack(Items.FISHING_ROD))
@@ -53,6 +66,9 @@ public class AutoFisherBlockEntity extends AbstractMachineBlockEntity {
 
         List<ItemStack> drops = new ArrayList<>();
         table.getRandomItems(params, drops::add);
+        if (level.getRandom().nextFloat() < NAUTILUS_CHANCE) {
+            drops.add(new ItemStack(Items.NAUTILUS_SHELL));
+        }
         depositOrDrop(level, pos, drops);
         return true;
     }

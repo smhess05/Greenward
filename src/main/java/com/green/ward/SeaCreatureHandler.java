@@ -95,13 +95,13 @@ public final class SeaCreatureHandler {
     }
 
     public static void initialize() {
-        if (!GreenwardConfig.ENABLE_SEA_CREATURES) {
-            return;
-        }
-
+        // Registered unconditionally — this is also where Design Program Update 2's Cod
+        // collection/Fishing XP tracking lives (same genuine-player-catch detection sea
+        // creatures already need), so it can't be gated behind ENABLE_SEA_CREATURES alone
+        // without also silently disabling fishing progression when that flag is off.
         LootTableEvents.MODIFY_DROPS.register(SeaCreatureHandler::onLootDrops);
         ServerLivingEntityEvents.AFTER_DEATH.register(SeaCreatureHandler::onDeath);
-        ServerTickEvents.END_SERVER_TICK.register(SeaCreatureHandler::suppressAbyssalWardenFatigue);
+        ServerTickEvents.END_SERVER_TICK.register(SeaCreatureHandler::onServerTick);
     }
 
     // --- Spawn hook ---
@@ -117,19 +117,70 @@ public final class SeaCreatureHandler {
             return;
         }
         Player player = hook.getPlayerOwner();
-        if (!(player instanceof net.minecraft.server.level.ServerPlayer) || !(hook.level() instanceof ServerLevel level)) {
+        if (!(player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) || !(hook.level() instanceof ServerLevel level)) {
             return;
         }
 
-        int rodTier = rodTier(player);
-        float chance = computeChance(player, rodTier);
-        if (level.getRandom().nextFloat() >= chance) {
-            return;
+        if (GreenwardConfig.ENABLE_SEA_CREATURES) {
+            int rodTier = rodTier(player);
+            float chance = computeChance(player, rodTier);
+            if (level.getRandom().nextFloat() < chance) {
+                Creature creature = rollCreature(level.getRandom(), rodTier);
+                drops.clear();
+                spawnCreature(level, hook.position(), creature, player);
+                announceCatchLogEntry(player, creature);
+                if (hasTwinBite(serverPlayer) && level.getRandom().nextFloat() < 0.25F) {
+                    spawnCreature(level, hook.position(), rollCreature(level.getRandom(), rodTier), player);
+                }
+                if (GreenwardConfig.ENABLE_COLLECTIONS_PROOFS) {
+                    trackSeaCreatureProofs(serverPlayer, level);
+                }
+                return;
+            }
         }
 
-        Creature creature = rollCreature(level.getRandom(), rodTier);
-        drops.clear();
-        spawnCreature(level, hook.position(), creature, player);
+        if (GreenwardConfig.ENABLE_COLLECTIONS_PROOFS) {
+            trackFishingCollection(serverPlayer, level, drops);
+        }
+    }
+
+    /** Patient (streak, broken by leaving the water — see {@link #onServerTick}) and
+     *  Storm Catch (instant, checked at the moment of the catch). */
+    private static void trackSeaCreatureProofs(net.minecraft.server.level.ServerPlayer player, ServerLevel level) {
+        PlayerProgress.incrementStreak(player, GreenwardProof.PATIENT, 1, 3);
+        if (level.isThundering()) {
+            PlayerProgress.completeProof(player, GreenwardProof.STORM_CATCH);
+        }
+    }
+
+    /** Cod collection + Fishing XP + Full Net (day-scoped), only for a catch that actually
+     *  contains cod — a junk/treasure/other-fish catch is still a genuine player action but
+     *  doesn't feed the Cod collection specifically. */
+    private static void trackFishingCollection(net.minecraft.server.level.ServerPlayer player, ServerLevel level, List<ItemStack> drops) {
+        int codCount = 0;
+        for (ItemStack drop : drops) {
+            if (drop.is(Items.COD)) {
+                codCount += drop.getCount();
+            }
+        }
+        if (codCount <= 0) {
+            return;
+        }
+        PlayerProgress.addCollection(player, GreenwardCollection.COD, codCount, true);
+        int dayNumber = (int) (level.getOverworldClockTime() / 24000L);
+        PlayerProgress.incrementDayCounter(player, GreenwardProof.FULL_NET, dayNumber, codCount, 10);
+    }
+
+    /** Twin Bite (Design Program Update 9 § 9.2) — granted by Tidal Wear, Leviathan's
+     *  Wear, or the Heartwood Tide branch's "Twin Current" node; a flat 25% chance to
+     *  land a second creature isn't specified by the source text as an exact number, so
+     *  this is a documented, invented rate. */
+    private static boolean hasTwinBite(net.minecraft.server.level.ServerPlayer player) {
+        if (GreenwardConfig.ENABLE_GEAR_SETS && (ModArmor.hasFullTidalSet(player) || ModArmor.hasFullLeviathanSet(player))) {
+            return true;
+        }
+        return GreenwardConfig.ENABLE_HEARTWOOD && HeartwoodData.get(((net.minecraft.server.level.ServerLevel) player.level()).getServer())
+                .isNodeUnlocked(HeartwoodBranch.TIDE, HeartwoodBranch.TIDE_TWIN_CURRENT);
     }
 
     private static int rodTier(Player player) {
@@ -140,22 +191,17 @@ public final class SeaCreatureHandler {
         return 0;
     }
 
+    /** Design Program Update 9 § 9.2 — "Retire the hardcoded rod-tier lookup table; the
+     *  existing chance values become stat grants on the rods, computed through the stat
+     *  layer." The rods' own {@code GreenwardComponents.STATS} components now carry the
+     *  same 5/15/30% this switch used to hardcode; {@link FishingSetContributor} carries
+     *  the full-set and rod-tier-3-synergy bonuses. This method just reads the total. */
     private static float computeChance(Player player, int rodTier) {
-        float chance = 0.05F;
-        chance += switch (rodTier) {
-            case 1 -> 0.05F;
-            case 2 -> 0.15F;
-            case 3 -> 0.30F;
-            default -> 0.0F;
-        };
-        boolean fullSet = GreenwardConfig.ENABLE_GEAR_SETS && ModArmor.hasFullAnglerSet(player);
-        if (fullSet) {
-            chance += 0.15F;
+        if (!(player instanceof net.minecraft.server.level.ServerPlayer serverPlayer)) {
+            return 0.0F;
         }
-        if (rodTier == 3 && fullSet) {
-            chance += 0.35F; // late-game synergy: top rod + full set is meant to feel nearly guaranteed
-        }
-        return Math.min(chance, 1.0F);
+        double chance = PlayerStatManager.get(serverPlayer, GreenwardStat.SEA_CREATURE_CHANCE) / 100.0;
+        return (float) Math.min(chance, 1.0);
     }
 
     private static Creature rollCreature(RandomSource random, int rodTier) {
@@ -175,6 +221,24 @@ public final class SeaCreatureHandler {
             }
         }
         return eligible.get(eligible.size() - 1);
+    }
+
+    /** The Catch Log (Design Program Update 9 § 9.2), in reduced scope: grades and
+     *  announces a notable catch live rather than maintaining the full persisted,
+     *  queryable list + milestone rewards the source text describes — a genuinely
+     *  separate piece of infrastructure (its own storage, a Field Guide page) that this
+     *  session's time budget didn't reach. Grade is derived from the creature's own
+     *  {@code minRodTier} (0-3), matching Modest/Fine/Superb/Legendary directly onto the
+     *  existing rod-tier gating rather than inventing a second rarity axis. */
+    private static final String[] CATCH_LOG_GRADES = {"Modest", "Fine", "Superb", "Legendary"};
+
+    private static void announceCatchLogEntry(Player player, Creature creature) {
+        if (!GreenwardConfig.ENABLE_FARMING_FISHING_DEPTH) {
+            return;
+        }
+        String grade = CATCH_LOG_GRADES[Math.max(0, Math.min(3, creature.minRodTier))];
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                "Catch Log: " + grade + " catch — " + creature.name() + "!"));
     }
 
     private static void spawnCreature(ServerLevel level, Vec3 pos, Creature creature, Player player) {
@@ -232,10 +296,18 @@ public final class SeaCreatureHandler {
         }
     }
 
-    // --- Abyssal Warden: suppress its vanilla mining-fatigue curse on nearby players ---
+    // --- Abyssal Warden fatigue suppression + Patient streak upkeep ---
 
-    private static void suppressAbyssalWardenFatigue(MinecraftServer server) {
+    private static void onServerTick(MinecraftServer server) {
         for (net.minecraft.server.level.ServerPlayer player : server.getPlayerList().getPlayers()) {
+            // Patient (Update 2): leaving the water breaks the streak. Checked per tick
+            // rather than at an exact "just left water" event — no such event exists —
+            // which is fine here since water entry/exit is a continuous state, unlike a
+            // one-shot action.
+            if (GreenwardConfig.ENABLE_COLLECTIONS_PROOFS && !player.isInWater()) {
+                PlayerProgress.resetStreak(player, GreenwardProof.PATIENT);
+            }
+
             if (!player.hasEffect(MobEffects.MINING_FATIGUE)) {
                 continue;
             }

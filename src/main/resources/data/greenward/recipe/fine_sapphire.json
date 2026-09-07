@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:rough_sapphire",
+    "greenward:rough_sapphire",
+    "greenward:rough_sapphire",
+    "greenward:rough_sapphire",
+    "greenward:rough_sapphire"
+  ],
+  "result": {
+    "id": "greenward:fine_sapphire",
+    "count": 1
+  }
+}

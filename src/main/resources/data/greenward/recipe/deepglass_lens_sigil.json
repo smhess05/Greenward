@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:deepglass_lens",
+    "greenward:perfect_sapphire",
+    "greenward:perfect_sapphire"
+  ],
+  "result": {
+    "id": "greenward:deepglass_lens_sigil",
+    "count": 1
+  }
+}

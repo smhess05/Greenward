@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_flawless_sapphire": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:flawless_sapphire"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_flawless_sapphire"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:deepglass_lens"
+    ]
+  }
+}

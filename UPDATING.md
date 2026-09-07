@@ -428,6 +428,275 @@ just a plainer tooltip.
   exactly one item, only one tier's full-set check can ever be true at once anyway — the
   separate ids are what make a mid-run tier swap transition cleanly rather than sticking.
 
+## ⚠ BREAKING CHANGE — Design Program Update 1: fertilized farmland is no longer a block
+
+**If you have an existing world with `greenward:fertilized_farmland` blocks placed
+before this update, read this before updating.**
+
+Fertilized farmland used to be a distinct block (`FertilizedFarmlandBlock`) that
+replaced vanilla farmland outright. As of Design Program Revision 3 Update 1 (the
+Permanence Charter, § 1.2 rule 4: "fertilized" must be `BlockPos`-keyed side-data, never
+a distinct block — a custom block replacing a vanilla one turns to air if the mod is
+ever removed, which would have deleted the farm underneath it), fertilization is instead
+tracked in a separate save-data file (`FertilizedFarmlandData`), and the block itself is
+always real `minecraft:farmland`.
+
+**What happens to existing worlds**: nothing breaks immediately. `FertilizedFarmlandBlock`
+is kept registered as a migration-only shim — it still loads correctly, it just
+self-converts to vanilla farmland (moisture preserved) plus the new side-data record the
+next time it's random-ticked (the same cadence vanilla farmland itself already ticks on).
+In practice this means existing fertilized tiles convert on their own within normal play,
+typically within minutes of being near a loaded chunk. If you want it done immediately
+rather than waiting, run `/greenward decommission` (or `/greenward decommission world`
+for a wider, one-shot sweep) — it converts every remaining instance right away as part of
+its normal cleanup pass.
+
+**What you'll notice**: nothing visually — fertilized farmland already looked like normal
+farmland from above; the "fertilized" state was only ever readable via its block ID and
+the yield-doubling behavior, which is unaffected by this change (`HarvestLogic` now
+checks `FertilizedFarmlandData.isFertilized(pos)` instead of the block type, so the 2×
+yield bonus keeps working exactly as before once the tile has converted).
+
+**Do not manually delete or reset `FertilizedFarmlandBlock`'s registration** in a custom
+build — that would turn any not-yet-converted tile in a live world to air immediately,
+which is exactly the failure mode this whole change exists to prevent. It's safe to
+delete the class entirely in a *future* update, once enough time has passed that no
+unconverted world is expected to still exist — not now.
+
+## Design Program Update 1 (26.2) — new APIs this pass needed verified
+
+- **`SavedData` registration in 26.2 goes through a `SavedDataType<T>` record**
+  (`Identifier`, `Supplier<T>` constructor, `Codec<T>`, `DataFixTypes`), not the older
+  string-key `computeIfAbsent(factory, deserializer, key)` overload some tutorials still
+  show. Fetch/create an instance via `level.getDataStorage().computeIfAbsent(TYPE)`
+  (`ServerLevel.getDataStorage()` returns `SavedDataStorage`, not `DimensionDataStorage`
+  — another renamed type in this version). One `SavedData` instance per `ServerLevel`,
+  so dimension-scoping is automatic; no manual dimension key needed. Verified against
+  vanilla's own `MapIndex` (`net.minecraft.world.level.saveddata.maps.MapIndex`) as a
+  worked example before writing `FertilizedFarmlandData`.
+- **Custom `DataComponentType`s register exactly like vanilla's own** — `Registry.register
+  (BuiltInRegistries.DATA_COMPONENT_TYPE, key, DataComponentType.builder()
+  .persistent(codec).networkSynchronized(streamCodec).build())`. `ByteBufCodecs
+  .fromCodecWithRegistries(Codec<T>)` converts a plain `Codec<T>` into the
+  `StreamCodec<RegistryFriendlyByteBuf, T>` the builder wants — much less code than
+  hand-writing a parallel `StreamCodec` for something like a `Map<GreenwardStat, Double>`
+  payload. `Codec.unboundedMap(keyCodec, valueCodec)` (from the `datafixerupper` library
+  jar directly — its static factories don't show up if you only check the merged
+  Minecraft jar, since `Codec` itself is a DFU class) builds the map codec;
+  `StringRepresentable.fromEnum(MyEnum::values)` builds a name-keyed codec for a custom
+  enum the same way vanilla's own `Rarity` does.
+- **Vanilla's own item `Rarity` (`net.minecraft.world.item.Rarity`, already registered as
+  `DataComponents.RARITY`) only has 4 tiers** (COMMON/UNCOMMON/RARE/EPIC) and, being a
+  plain `enum`, can't be extended with a 5th. A mod wanting a 5-tier rarity system needs
+  its own parallel enum and component — confirmed by decompiling `Rarity` directly rather
+  than assuming it would stretch to fit.
+- **There is no Fabric event that lets a listener change a damage amount** —
+  `ServerLivingEntityEvents.ALLOW_DAMAGE` is `boolean allowDamage(LivingEntity,
+  DamageSource, float)`, a gate only; there is no companion "modify" event in
+  `fabric-entity-events-v1` or any other checked module. Changing an amount without a
+  mixin means cancelling (`return false`) and re-invoking `entity.hurtServer(level,
+  source, newAmount)` once with a re-entrancy guard (a `ThreadLocal<DamageSource>`
+  comparing by reference is enough, since server damage handling is single-threaded per
+  tick) — the same mechanism vanilla's own Totem-of-Undying-style saves use internally.
+  Re-invoking `hurtServer` this way is safe and complete for *incoming* damage (it redoes
+  everything — armor durability, knockback, sound — correctly with the new number); doing
+  the same for a fully custom *outgoing* damage calculation is much riskier, since
+  `Player.attack()`'s own enchantment/weapon-bonus computation happens entirely before any
+  `hurt()` call and would be silently skipped by a naive replacement — hence this project
+  deliberately *layers* Strength/Crit onto vanilla's already-computed amount rather than
+  replacing the calculation (see `GreenwardDamageHandler`'s own doc comment for the
+  known crit-double-counting edge case this conservative choice accepts).
+- **`AttackEntityCallback` (`fabric-events-interaction-v0`) fires before vanilla's own
+  attack processing and fully suppresses it if you return anything but `PASS`** ("SUCCESS
+  cancels further processing," per its own doc comment) — this makes it tempting for a
+  full outgoing-damage replacement, but doing so means manually replicating everything
+  vanilla's `Player.attack()` normally does (sweep attacks, Knockback/Fire Aspect
+  enchants, etc.), which is why this project didn't use it for the Strength/Crit stats —
+  documented as a considered-and-rejected approach, not an unconsidered gap.
+- **`PlayerBlockBreakEvents.BEFORE` cancels the entire break** (block stays, no drops at
+  all) if you return `false` — it's not a "let it break but change the drops" hook.
+  `PlayerBlockBreakEvents.AFTER` (void, fires once vanilla's own break/drop already
+  happened) is what Mining Fortune actually uses: let vanilla proceed completely
+  untouched, then add independently-rolled extra `Block.getDrops` copies on top. Both
+  events, notably, only exist in `fabric-events-interaction-v0`, *not*
+  `fabric-lifecycle-events-v1` as their name might suggest — check the actual jar
+  contents rather than guessing the module from the package-sounding name.
+- **`ChunkPos` is a `Record`** in this version — `x()`/`z()` accessor methods, not public
+  `x`/`z` fields; pack to a `long` via `.pack()`, not `.toLong()`. `ServerLevel`'s min/max
+  build height are `getMinY()`/`getMaxY()` (via `LevelHeightAccessor`), not
+  `getMinBuildHeight()`/`getMaxBuildHeight()`. `GameProfile.name()`, not `.getName()`.
+  `CommandSourceStack` permission checking goes through `Commands.hasPermission
+  (Commands.LEVEL_GAMEMASTERS)` (a `.requires(...)` predicate factory) in this version's
+  new permission system, not the old `source.hasPermission(int level)`.
+- **A brute-force per-block chunk scan is expensive enough to matter, measured, not
+  assumed**: `/greenward decommission world` at a naive 24-chunk radius (~2,400 chunks ×
+  3 dimensions, each force-loaded/generated synchronously via `level.getChunk(...)`)
+  blocked the main thread long enough to time out a live RCON connection — caught by
+  actually running it via RCON, not by reasoning about it in the abstract.
+  `LevelChunkSection.maybeHas(Predicate<BlockState>)` (backed by the section's block
+  palette, so it's cheap) lets a per-section pre-check skip the expensive per-position
+  scan for sections that can't contain a Greenward block at all;
+  `LevelChunkSection.hasOnlyAir()` skips empty sections even faster. Even with that fixed,
+  the radius still needed cutting to 6 — chunk *generation* cost for previously-unvisited
+  chunks dominates, and the section fast-path can't do anything about that half of the
+  cost.
+
+## Design Program Update 2 (26.2) — new APIs this pass needed verified
+
+- **`AttachmentRegistry.builder()` is deprecated in this Fabric API version.** The
+  non-deprecated path is `AttachmentRegistry.create(Identifier, Consumer<Builder<A>>)` —
+  functionally identical, just avoids the deprecation warning. `Builder.copyOnDeath()`
+  must be called explicitly for a persistent player attachment to survive respawn; without
+  it, persistent-but-not-copy-on-death data is dropped the moment a player dies (confirmed
+  by reading the builder interface, not assumed — this would have been a silent, ugly bug:
+  every player's entire Collections/Skills/Proofs history wiped by the first death).
+- **Custom advancement criteria are `SimpleCriterionTrigger<T extends SimpleInstance>`
+  subclasses**, registered into `BuiltInRegistries.TRIGGER_TYPES` exactly like a vanilla
+  one (`Registry.register(BuiltInRegistries.TRIGGER_TYPES, key, new
+  YourTrigger())`) — no mixin, it's a normal registry. The actual package is
+  `net.minecraft.advancements.triggers`, *not* `net.minecraft.advancements.critereon`
+  (a plausible-sounding guess that doesn't exist in this version — confirmed by listing
+  the jar's actual contents rather than trusting the package name pattern). Worked
+  example copied from vanilla's own `UsedTotemTrigger`: a `record TriggerInstance
+  (Optional<ContextAwarePredicate> player, ...yourFields) implements
+  SimpleCriterionTrigger.SimpleInstance`, a `RecordCodecBuilder`-built `CODEC` on that
+  record, and a public `trigger(ServerPlayer, ...)` method on the outer class that calls
+  the protected `trigger(player, Predicate<T>)` inherited from `SimpleCriterionTrigger`.
+  An advancement JSON referencing it needs nothing special — `"trigger":
+  "yournamespace:your_id"` plus whatever `"conditions"` your codec expects, exactly like
+  any vanilla trigger.
+- **There is no `Level.getDayTime()` in this version.** The renamed equivalent is
+  `getOverworldClockTime()` (cumulative, keeps counting past 24000/48000/etc. rather than
+  wrapping — divide by 24000 for an ever-increasing "day number," matching old `getDayTime()`
+  semantics exactly) — confirmed by grepping the actual interface after the old name
+  produced a plain "cannot find symbol," not a deprecation warning, so nothing pointed at
+  the replacement automatically.
+- **`net.minecraft.world.entity.monster.skeleton.AbstractSkeleton`** — skeleton-family
+  mobs (Skeleton, Stray, WitherSkeleton, Bogged, Parched) moved into their own `skeleton`
+  sub-package under `monster` in this version, not directly in `net.minecraft.world.entity
+  .monster` alongside `Creeper`/`Monster` — a plain `instanceof monster.AbstractSkeleton`
+  guess fails to resolve; the jar has to be searched for the actual path.
+- **`BlockAndLightGetter.getBrightness(LightLayer, BlockPos)`** (inherited by `Level`/
+  `ServerLevel`) is the real per-layer light query — used as an O(1) proxy for "is there a
+  torch nearby" (Cold Iron) instead of a brute-force block-radius search; see the
+  Design Program Update 2 section of `GREENWARD_README.md` for the reasoning.
+- **`Inventory` has no `countItem(Item)` convenience method** in this version — counting a
+  specific item across a player's inventory means iterating `getNonEquipmentItems()`
+  (a `NonNullList<ItemStack>`) and summing matching stacks by hand.
+
+## Design Program Update 3 (26.2) — new APIs this pass needed verified
+
+- **Vanilla `BundleItem`/`BundleContents` is not a fit for the Satchels and was
+  deliberately not reused.** Read the actual jar (`BundleContents` has no public mutator
+  beyond its constructor — insertion/removal logic lives entirely in `BundleItem`'s own
+  static/instance methods) before deciding: its capacity model is a weight `Fraction`
+  (`64 / stackMaxSize` per unit) tuned for "how many arbitrary items fit in one bag," not
+  the spec's flat 256/1024/4096 item-count tiers, and it comes bundled with its own
+  right-click-to-open GUI and per-item toggle-select interaction that a passive vacuum
+  container doesn't want. Built a small custom `SatchelContents` component instead —
+  `Map<Item, Integer>` counts + a `capacity` field, both codec-backed — following this
+  project's own established custom-`DataComponentType` pattern from Update 1 rather than
+  fighting a vanilla system shaped for a different problem.
+- **`ItemStack` has exactly one `.is(...)` overload in this version**:
+  `is(Predicate<Holder<Item>>)`. There is no `.is(Item)` or `.is(TagKey<Item>)` shortcut —
+  reference-equality (`stack.getItem() == item`) covers the single-item case, and a tag
+  check needs `BuiltInRegistries.ITEM.wrapAsHolder(stack.getItem()).is(tagKey)` explicitly.
+  `Item.builtInRegistryHolder()` also exists and returns the same `Holder`, but it's
+  `@Deprecated` in this version — `wrapAsHolder` is the clean path, same "prefer the
+  non-deprecated one" call as Update 2's `AttachmentRegistry.create` vs. `.builder()`.
+- **`get`/`getOrDefault` for data components on an `ItemStack` are default methods
+  inherited from `DataComponentHolder`**, not declared directly on `ItemStack` itself — a
+  `javap -p` on `ItemStack` alone won't show them; they only appear when the interface is
+  checked too. Worth remembering before concluding an accessor "doesn't exist" from a
+  single-class jar dump.
+- **`Inventory.INVENTORY_SIZE = 36`** is a real public constant (main inventory + hotbar,
+  excludes armor/offhand/saddle, which sit at fixed indices 40/41/42) — used as the vacuum
+  scan bound so Satchels never touch equipped gear.
+
+## Design Program Update 4 (26.2) — new APIs and one breaking-ish behavior change
+
+- **`Level.isDay()`/`isNight()` don't exist in this version.** Approximated with
+  `getOverworldClockTime() % 24000 < 12000` for the Sunwheel's daylight-only bonus —
+  matches the same modulo-arithmetic approach Update 2's Graveyard Shift Proof already
+  uses for its own night-window check.
+- **`ChunkPos.containing(BlockPos)`** is the static factory for building a `ChunkPos` from
+  a block position in this version — there's no `new ChunkPos(BlockPos)` constructor.
+- **`GlobalPos.CODEC`** exists and round-trips cleanly through a `SavedData` — used for
+  `MachineCountData`'s cross-dimension machine registry (a dimension `ResourceKey` +
+  `BlockPos` pair) exactly the same way `FertilizedFarmlandData` already uses
+  `BlockPos.CODEC` for a single-dimension one.
+- **A shared `Block`/`BlockEntity` class backing multiple distinct registered blocks**
+  (`EffigyBlock`/`EffigyBlockEntity`, one Java class for all five Effigies) needs
+  `MapCodec.unit(() -> this)` for `Block.codec()` instead of the usual `simpleCodec
+  (Constructor::new)` — there's no single `Properties -> T` factory that could
+  reconstruct the *specific* instance generically when five different instances share one
+  class. `MapCodec.unit` just hands back the already-fully-constructed instance instead
+  of trying to rebuild one.
+- **Circular block/block-entity-type construction, resolved by lazy static lookup, not
+  constructor threading.** `EffigyBlock` and `EffigyBlockEntity` both need to know their
+  own `BlockEntityType`, but `ModBlocks.initialize()` (which constructs the Blocks) runs
+  *before* `ModBlockEntities.initialize()` (which constructs the actual `BlockEntityType`
+  instances bound to those Blocks) — so neither can receive it through a constructor
+  parameter. Both resolve it instead via a small `switch (effigyType) { case ROTTING ->
+  ModBlockEntities.EFFIGY_ROTTING; ... }` lookup method, called only at runtime (a real
+  placement or chunk load, long after both `initialize()` calls have completed) — the
+  same enum-init-order-safe pattern `CompressionLadder`/`SatchelType` already established
+  in Updates 2-3 for a related problem (an enum constant capturing a not-yet-initialized
+  field), just applied to a Block/BlockEntityType pair instead of an enum constant.
+- **⚠ Behavior change, not just a rebalance: fuel is no longer required for any
+  automation machine or Effigy to operate at all.** Before this update, an unfueled
+  machine did nothing — `operationsRemaining <= 0` blocked `doOperation` entirely. Now
+  every machine always attempts its operation every interval; fuel only ever adds a
+  temporary speed percentage on top of that. Existing saves keep working (a
+  `NonNullList<ItemStack>` fuel slot and its consumption logic are unchanged in shape,
+  only in what the consumed item grants), but a player used to "no coal = no output"
+  will see previously-idle machines start producing the instant this update loads.
+
+## Design Program Update 5 (26.2) — new APIs this pass needed verified
+
+- **`c:ores` is Fabric's own convention block tag**, unioning every vanilla ore
+  (coal/copper/diamond/emerald/gold/iron/lapis/netherite_scrap/quartz/redstone) — found in
+  `fabric-convention-tags-v2`'s bundled data, `data/c/tags/block/ores.json`. Reused for
+  Amber's "any ore" condition and Vein Blast's detonation radius instead of hand-listing
+  every ore block again.
+- **`RecipeSerializer` is a plain record in this version** — `record RecipeSerializer<T>
+  (MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec)` — not an
+  interface with default methods. A stateless custom recipe (this project's first,
+  `GemSocketRecipe`) follows the exact pattern vanilla's own `RepairItemRecipe` uses:
+  a singleton `INSTANCE`, `MapCodec.unit(() -> INSTANCE)`, and `StreamCodec.unit(INSTANCE)`
+  — confirmed by decompiling `RepairItemRecipe` itself rather than guessing the shape.
+  `CustomRecipe` (not `SpecialRecipe`, the pre-1.21 name) already provides concrete
+  defaults for `isSpecial()`/`showNotification()`/`group()`/`category()`/`placementInfo()`
+  — only `matches`, `assemble`, and `getSerializer()` need implementing. The recipe's own
+  JSON is trivial: `{"type": "greenward:gem_socket"}`, matching vanilla's own
+  `data/minecraft/recipe/repair_item.json` (`{"type":
+  "minecraft:crafting_special_repairitem"}`) — no ingredients block at all, since
+  `matches()` does the real work. `RecipeType.CRAFTING` (vanilla's own shared crafting
+  type) is reused as-is; only a new `RecipeSerializer` needed registering, into
+  `Registries.RECIPE_SERIALIZER`.
+- **A custom `EntityType` needs `EntityType.Builder.of(factory, category)`, and `.build(...)`
+  now takes the `ResourceKey<EntityType<?>>` directly** (not a no-arg `build()`) — the id
+  gets baked into the builder the same way `Item.Properties().setId(key)` already works
+  elsewhere in this project. `net.minecraft.world.entity.projectile
+  .throwableitemprojectile.ThrowableItemProjectile` moved into its own sub-package in this
+  version (not directly under `projectile`) — a plausible guessed import fails silently
+  informative ("class not found") rather than compiling, same lesson as Update 2's
+  `AbstractSkeleton` package move; found by listing the actual jar contents.
+  `Projectile.spawnProjectileUsingShoot(factory, level, stack, shooter, dx, dy, dz, power,
+  inaccuracy)` is the modern equivalent of manually constructing + calling
+  `shootFromRotation` — handles velocity math and world-insertion in one call.
+- **Firing a Fabric event's listeners manually** (as opposed to just registering a
+  listener) is `SomeEvent.EVENT.invoker().theMethod(...)` — `Event<T>` exposes a public
+  `invoker()` returning the same functional-interface type listeners implement, which
+  broadcasts to every registered listener when called. Used so Vein Blast's manually-mined
+  blocks get exactly the same `PlayerBlockBreakEvents.AFTER` treatment (Fortune,
+  collections, rare-ore rolls) a real single-block break already gets, instead of
+  duplicating that logic a second time.
+- **`ThrownItemRenderer`'s 1-argument constructor is deprecated** in favor of the 3-arg
+  `(context, scale, fullBright)` overload — same "prefer the non-deprecated one" call as
+  `AttachmentRegistry.create` vs. `.builder()` (Update 2) and `Holder.wrapAsHolder` vs.
+  `Item.builtInRegistryHolder()` (Update 4).
+
 ## Principles that keep this easy
 
 - **Stay on the stable Fabric API** (events like UseBlockCallback), never mixins

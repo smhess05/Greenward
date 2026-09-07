@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "OAO",
+    "APA",
+    "OAO"
+  ],
+  "key": {
+    "O": "minecraft:obsidian",
+    "A": "minecraft:amethyst_shard",
+    "P": "minecraft:ender_pearl"
+  },
+  "result": {
+    "id": "greenward:waystone",
+    "count": 1
+  }
+}

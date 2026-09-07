@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_deepglass_lens": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:deepglass_lens"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_deepglass_lens"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:deepglass_lens_sigil"
+    ]
+  }
+}

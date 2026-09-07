@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:cutters_charm",
+    "greenward:deepslate_massif",
+    "greenward:deepslate_massif"
+  ],
+  "result": {
+    "id": "greenward:cutters_charm_sigil",
+    "count": 1
+  }
+}

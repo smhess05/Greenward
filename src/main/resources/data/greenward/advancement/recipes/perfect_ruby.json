@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_flawless_ruby": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:flawless_ruby"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_flawless_ruby"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:perfect_ruby"
+    ]
+  }
+}

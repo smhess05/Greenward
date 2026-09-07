@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:fine_amber",
+    "greenward:fine_amber",
+    "greenward:fine_amber",
+    "greenward:fine_amber",
+    "greenward:fine_amber"
+  ],
+  "result": {
+    "id": "greenward:flawless_amber",
+    "count": 1
+  }
+}

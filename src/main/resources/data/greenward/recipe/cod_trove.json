@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:cod_haul",
+    "greenward:cod_haul",
+    "greenward:cod_haul",
+    "greenward:cod_haul",
+    "greenward:cod_haul",
+    "greenward:cod_haul",
+    "greenward:cod_haul",
+    "greenward:cod_haul",
+    "greenward:cod_haul"
+  ],
+  "result": {
+    "id": "greenward:cod_trove",
+    "count": 1
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_pearl_nexus": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:pearl_nexus"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_pearl_nexus"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:voidstep_blade"
+    ]
+  }
+}

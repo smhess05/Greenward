@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:leviathan_rod",
+    "minecraft:blaze_rod",
+    "minecraft:blaze_rod",
+    "minecraft:blaze_rod",
+    "minecraft:blaze_rod",
+    "minecraft:magma_cream",
+    "minecraft:magma_cream",
+    "minecraft:obsidian"
+  ],
+  "result": {
+    "id": "greenward:scorched_leviathan_rod",
+    "count": 1
+  }
+}

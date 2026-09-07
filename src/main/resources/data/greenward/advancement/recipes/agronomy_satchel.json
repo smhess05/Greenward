@@ -1,0 +1,22 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "wheat_tier_6": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "wheat",
+        "tier": 6
+      }
+    }
+  },
+  "requirements": [
+    [
+      "wheat_tier_6"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:agronomy_satchel"
+    ]
+  }
+}

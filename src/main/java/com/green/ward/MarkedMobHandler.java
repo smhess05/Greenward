@@ -36,6 +36,11 @@ public final class MarkedMobHandler {
     private static final AttachmentType<String> MARKER = AttachmentRegistry.createPersistent(
             Identifier.fromNamespaceAndPath(ModItems.MOD_ID, "marked"), Codec.STRING);
 
+    /** Used by {@link GreenwardCombatHandler} for the Marked Hunter proof. */
+    public static boolean isMarked(net.minecraft.world.entity.LivingEntity entity) {
+        return entity.getAttached(MARKER) != null;
+    }
+
     private enum Marked {
         REVENANT("Revenant", EntityTypes.ZOMBIE, 1.5),
         DEADEYE("Deadeye", EntityTypes.SKELETON, 1.5),
@@ -161,7 +166,13 @@ public final class MarkedMobHandler {
 
         switch (marked) {
             case ASHBORN -> drop(level, entity, Items.GUNPOWDER, 2 + random.nextInt(3));
-            case WRAITH -> drop(level, entity, Items.ENDER_PEARL, 1);
+            case WRAITH -> {
+                drop(level, entity, Items.ENDER_PEARL, 1);
+                // Wraith's Eye talisman — Design Program Update 6 § 6.3, "Wraith drop, 4%".
+                if (GreenwardConfig.ENABLE_HEARTWOOD && random.nextFloat() < 0.04F) {
+                    drop(level, entity, ModItems.WRAITHS_EYE, 1);
+                }
+            }
             default -> { }
         }
     }

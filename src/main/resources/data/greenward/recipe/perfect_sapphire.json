@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:flawless_sapphire",
+    "greenward:flawless_sapphire",
+    "greenward:flawless_sapphire",
+    "greenward:flawless_sapphire",
+    "greenward:flawless_sapphire"
+  ],
+  "result": {
+    "id": "greenward:perfect_sapphire",
+    "count": 1
+  }
+}

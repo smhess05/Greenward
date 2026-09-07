@@ -73,6 +73,13 @@ public final class SetBonusHandler {
     private static final AttributeModifier REAPER_DAMAGE = new AttributeModifier(
             REAPER_DAMAGE_ID, 2.0, AttributeModifier.Operation.ADD_VALUE);
 
+    // --- Stat System: Health/Speed are the two stats with a direct vanilla attribute
+    // equivalent, so they apply as real transient AttributeModifiers rather than a
+    // custom formula. Health/Speed stat 100 is the "no bonus" baseline (matches vanilla
+    // defaults exactly), so the modifier amount is always relative to 100. ---
+    private static final Identifier STAT_HEALTH_ID = Identifier.fromNamespaceAndPath(ModItems.MOD_ID, "stat_health");
+    private static final Identifier STAT_SPEED_ID = Identifier.fromNamespaceAndPath(ModItems.MOD_ID, "stat_speed");
+
     /** Grim Resolve cooldown tracker (in-memory only — doesn't need to survive a relog). */
     private static final Map<UUID, Long> GRIM_RESOLVE_LAST_USE = new HashMap<>();
     private static final long GRIM_RESOLVE_COOLDOWN_TICKS = 6000; // 5 minutes
@@ -80,12 +87,8 @@ public final class SetBonusHandler {
     private static int tickCounter;
 
     public static void initialize() {
-        if (!GreenwardConfig.ENABLE_GEAR_SETS && !GreenwardConfig.ENABLE_FARMING_PROGRESSION
-                && !GreenwardConfig.ENABLE_MINING_PROGRESSION && !GreenwardConfig.ENABLE_FISHING_PROGRESSION
-                && !GreenwardConfig.ENABLE_COMBAT_PROGRESSION) {
-            return;
-        }
-
+        // Always registered — this is also the Stat System's recompute host (Update 1),
+        // which must run regardless of whether any individual pillar flag is on.
         ServerTickEvents.END_SERVER_TICK.register(SetBonusHandler::onServerTick);
 
         if (GreenwardConfig.ENABLE_COMBAT_PROGRESSION) {
@@ -125,6 +128,13 @@ public final class SetBonusHandler {
         tickCounter = 0;
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            StatProfile stats = PlayerStatManager.recompute(player);
+            applyStatAttributes(player, stats);
+            sendStatHud(player, stats);
+            if (GreenwardConfig.ENABLE_COLLECTIONS_PROOFS) {
+                PlayerProgress.checkStockpileProofs(player);
+            }
+
             if (GreenwardConfig.ENABLE_GEAR_SETS) {
                 applyHarvesterBonus(player);
                 applyProspectorBonus(player);
@@ -148,6 +158,36 @@ public final class SetBonusHandler {
                 applyReapersAegisBonus(player);
             }
         }
+    }
+
+    private static void applyStatAttributes(ServerPlayer player, StatProfile stats) {
+        double healthBonus = (stats.get(GreenwardStat.HEALTH) - GreenwardStat.HEALTH.baseValue()) / 5.0; // 10 stat = 1 heart = 2 HP
+        double speedDelta = (stats.get(GreenwardStat.SPEED) - GreenwardStat.SPEED.baseValue()) / 100.0; // percentage of vanilla base
+
+        AttributeInstance health = player.getAttribute(Attributes.MAX_HEALTH);
+        if (health != null) {
+            health.removeModifier(STAT_HEALTH_ID);
+            if (healthBonus != 0.0) {
+                health.addTransientModifier(new AttributeModifier(STAT_HEALTH_ID, healthBonus, AttributeModifier.Operation.ADD_VALUE));
+            }
+        }
+
+        AttributeInstance speed = player.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) {
+            speed.removeModifier(STAT_SPEED_ID);
+            if (speedDelta != 0.0) {
+                speed.addTransientModifier(new AttributeModifier(STAT_SPEED_ID, speedDelta, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            }
+        }
+    }
+
+    /** Action-bar HUD (Update 1 § 1.6): {@code ❤ 340/340   ❈ 312}. Sent as a vanilla
+     *  action-bar system message from the server — no client-side HUD renderer needed. */
+    private static void sendStatHud(ServerPlayer player, StatProfile stats) {
+        String text = String.format(java.util.Locale.ROOT, "%s %d/%d   %s %d",
+                GreenwardStat.HEALTH.symbol(), Math.round(player.getHealth()), Math.round(player.getMaxHealth()),
+                GreenwardStat.DEFENSE.symbol(), Math.round(stats.get(GreenwardStat.DEFENSE)));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(text), true);
     }
 
     private static void applyHarvesterBonus(ServerPlayer player) {

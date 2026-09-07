@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:anglers_knot",
+    "greenward:cod_trove",
+    "greenward:cod_trove"
+  ],
+  "result": {
+    "id": "greenward:anglers_knot_sigil",
+    "count": 1
+  }
+}

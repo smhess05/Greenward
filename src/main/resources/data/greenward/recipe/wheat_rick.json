@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:wheat_bale",
+    "greenward:wheat_bale",
+    "greenward:wheat_bale",
+    "greenward:wheat_bale",
+    "greenward:wheat_bale",
+    "greenward:wheat_bale",
+    "greenward:wheat_bale",
+    "greenward:wheat_bale",
+    "greenward:wheat_bale"
+  ],
+  "result": {
+    "id": "greenward:wheat_rick",
+    "count": 1
+  }
+}

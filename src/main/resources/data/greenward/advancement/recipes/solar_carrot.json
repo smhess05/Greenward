@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_sunburst_carrot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:sunburst_carrot"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_sunburst_carrot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:solar_carrot"
+    ]
+  }
+}

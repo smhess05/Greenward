@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:potato_pallet",
+    "greenward:potato_pallet",
+    "greenward:potato_pallet",
+    "greenward:potato_pallet",
+    "greenward:potato_pallet",
+    "greenward:potato_pallet",
+    "greenward:potato_pallet",
+    "greenward:potato_pallet",
+    "greenward:potato_pallet"
+  ],
+  "result": {
+    "id": "greenward:potato_granary",
+    "count": 1
+  }
+}

@@ -1,20 +1,25 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_wheat_bale": {
-      "trigger": "minecraft:inventory_changed",
+    "wheat_tier_7": {
+      "trigger": "greenward:tier_reached",
       "conditions": {
-        "items": [
-          {
-            "items": "greenward:wheat_bale"
-          }
-        ]
+        "collection": "wheat",
+        "tier": 7
+      }
+    },
+    "potato_tier_5": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "potato",
+        "tier": 5
       }
     }
   },
   "requirements": [
     [
-      "has_wheat_bale"
+      "wheat_tier_7",
+      "potato_tier_5"
     ]
   ],
   "rewards": {

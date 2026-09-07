@@ -38,7 +38,15 @@ public abstract class AbstractMachineScreen<T extends AbstractMachineMenu> exten
     private final List<SlotLabel> slotLabels;
 
     protected AbstractMachineScreen(T menu, Inventory inventory, Component title, Identifier texture, List<SlotLabel> slotLabels) {
-        super(menu, inventory, title, 176, 256);
+        this(menu, inventory, title, texture, slotLabels, 176);
+    }
+
+    /** The Auto-Miner's 6th special-slot column (Compression, at X=188) runs past the
+     *  standard 176px panel width, so it alone needs a wider canvas crop — still within
+     *  the shared 256x256 texture, just showing more of it. */
+    protected AbstractMachineScreen(T menu, Inventory inventory, Component title, Identifier texture,
+                                     List<SlotLabel> slotLabels, int imageWidth) {
+        super(menu, inventory, title, imageWidth, 256);
         this.texture = texture;
         this.slotLabels = slotLabels;
     }
@@ -55,10 +63,10 @@ public abstract class AbstractMachineScreen<T extends AbstractMachineMenu> exten
         int yo = this.topPos;
         graphics.blit(RenderPipelines.GUI_TEXTURED, this.texture, xo, yo, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
 
-        int operationsRemaining = this.menu.data.get(0);
+        int boostTicksRemaining = this.menu.data.get(0);
         int burnMax = this.menu.data.get(1);
-        if (operationsRemaining > 0 && burnMax > 0) {
-            int litHeight = Mth.ceil((float) operationsRemaining / burnMax * 13.0F) + 1;
+        if (boostTicksRemaining > 0 && burnMax > 0) {
+            int litHeight = Mth.ceil((float) boostTicksRemaining / burnMax * 13.0F) + 1;
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - litHeight,
                     xo + 8, yo + AbstractMachineMenu.STATUS_ROW_Y + 14 - litHeight, 14, litHeight);
         }

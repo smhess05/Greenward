@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:sheaf_token",
+    "greenward:wheat_mow",
+    "greenward:wheat_mow"
+  ],
+  "result": {
+    "id": "greenward:sheaf_token_sigil",
+    "count": 1
+  }
+}

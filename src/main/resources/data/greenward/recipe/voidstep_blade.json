@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " P",
+    " P",
+    " S"
+  ],
+  "key": {
+    "P": "greenward:pearl_nexus",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "greenward:voidstep_blade",
+    "count": 1
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_wheat_mow": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:wheat_mow"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_wheat_mow"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:wheat_mow_uncraft"
+    ]
+  }
+}

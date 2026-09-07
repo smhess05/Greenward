@@ -1,20 +1,25 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_cobble_monolith": {
-      "trigger": "minecraft:inventory_changed",
+    "cobblestone_tier_7": {
+      "trigger": "greenward:tier_reached",
       "conditions": {
-        "items": [
-          {
-            "items": "greenward:cobble_monolith"
-          }
-        ]
+        "collection": "cobblestone",
+        "tier": 7
+      }
+    },
+    "deepslate_tier_5": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "deepslate",
+        "tier": 5
       }
     }
   },
   "requirements": [
     [
-      "has_cobble_monolith"
+      "cobblestone_tier_7",
+      "deepslate_tier_5"
     ]
   ],
   "rewards": {

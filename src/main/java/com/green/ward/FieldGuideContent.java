@@ -49,6 +49,17 @@ public final class FieldGuideContent {
                 .body("IX.   Field Reference")
                 .build());
 
+        p.add(new Page()
+                .heading("Contents, cont.")
+                .blank()
+                .body("X.    The Heartwood")
+                .body("XI.   Threat")
+                .body("XII.  Villagers & Seals")
+                .body("XIII. Deeper Waters & Fields")
+                .body("XIV.  Endgame")
+                .body("XV.   Beyond the Design")
+                .build());
+
         // ---------------- I. Compression ----------------
 
         p.add(sectionHeader("I", "Compression",
@@ -305,7 +316,7 @@ public final class FieldGuideContent {
 
         p.add(new Page()
                 .title("Fishing - Tier III")
-                .type("Leviathan's Wear")
+                .type("Leviathan Hunter's Wear")
                 .blank()
                 .body("Ascend a Tidal piece with:")
                 .body("1x Leviathan's Heart")
@@ -345,7 +356,9 @@ public final class FieldGuideContent {
                 .body("1x Reaper's Core")
                 .blank()
                 .body("Reaper's Core (shapeless):")
-                .body("1x Bone Reliquary, 1x Powder Cache, 1x Ender Pearl")
+                .body("1x Bone Reliquary, 1x Powder Cache, 1x Ender Pearl, 1x Boss Essence")
+                .blank()
+                .note("Boss Essence only drops from the Ender Dragon or Wither once world Threat hits 75+ (see Endgame) — a real late-game gate the earlier pillars don't have.")
                 .blank()
                 .note("Full set: attack speed +20%, damage +2, Hunter's Mark Aura (see Field Reference), and Grim Resolve.")
                 .build());
@@ -367,14 +380,15 @@ public final class FieldGuideContent {
                 .title("Golden Harvest")
                 .type("Shaped, 3x3 - Farming")
                 .blank()
-                .body("4x Wheat Bale")
-                .body("4x Potato Crate")
+                .body("4x Wheat Bale (corners)")
+                .body("4x Potato Crate (edges)")
+                .body("1x Sheaf-Token (center)")
                 .blank()
                 .divider()
                 .title("Deepstone Core")
                 .type("Shaped, 3x3 - Mining")
                 .blank()
-                .body("4x Obsidian, 4x Diamond, 1x Netherite Scrap")
+                .body("4x Diamond, 3x Obsidian, 1x Netherite Scrap, 1x any Perfect gem")
                 .build());
 
         p.add(new Page()
@@ -382,10 +396,11 @@ public final class FieldGuideContent {
                 .type("Shapeless - Fishing")
                 .blank()
                 .body("4x Prismarine Crystals")
-                .body("4x Nautilus Shell")
+                .body("3x Nautilus Shell")
+                .body("1x Deepglass Lens")
                 .body("1x Heart of the Sea")
                 .blank()
-                .note("The Crystals and Shells come straight off the Auto-Fisher's own ungated treasure table — only the single Heart of the Sea needs a manual catch.")
+                .note("Prismarine Crystals come from Guardians, not fishing. Nautilus Shells can come from the Auto-Fisher's small independent chance per catch or a manual catch; the Heart of the Sea and Deepglass Lens (see The Heartwood) both need real manual effort either way.")
                 .build());
 
         p.add(new Page()
@@ -397,7 +412,7 @@ public final class FieldGuideContent {
                 .body("1x Abyssal Pearl (right)")
                 .body("1x Reaper's Core (bottom)")
                 .blank()
-                .note("One catalyst per pillar, center left empty. Every ingredient upstream of this recipe can be farmed, mined, fished, or fought for — nothing is a one-time boss drop.")
+                .note("One catalyst per pillar, center left empty. Since the Endgame pass, this chain is deliberately no longer all-automatable — Boss Essence (a real Dragon/Wither drop) is baked into Reaper's Core specifically to keep the God Potion a genuine late-game goal.")
                 .build());
 
         p.add(new Page()
@@ -407,7 +422,7 @@ public final class FieldGuideContent {
                 .body("Awkward Potion")
                 .body("+ 1x Godly Catalyst")
                 .blank()
-                .note("Brew it like any vanilla potion — hopper-automatable, same as any brew.")
+                .note("Brew it like any vanilla potion — hopper-automatable, same as any brew. Effects now last a full 8 hours.")
                 .build());
 
         // ---------------- IX. Field Reference ----------------
@@ -447,6 +462,182 @@ public final class FieldGuideContent {
                 .body("Only a genuine melee kill can trigger one — never a trap, farm, or projectile. Chance rises with combat armor tier, capped at 10%; Reaper's Aegis sits at the cap outright.")
                 .blank()
                 .note("Ashborn drops bonus Gunpowder, Wraith a guaranteed Ender Pearl — the fast route to Reaper's Core.")
+                .build());
+
+        // ---------------- X. The Heartwood ----------------
+
+        p.add(sectionHeader("X", "The Heartwood",
+                "One block, one per world, four branches of perks and a bank of talisman sockets."));
+
+        p.add(new Page()
+                .title("Heartwood")
+                .type("Shaped, 3x3")
+                .blank()
+                .body("4x Iron Block (corners)")
+                .body("1x Wheat Bale, 1x Cobble Monolith")
+                .body("1x Cod Shoal, 1x Bone Reliquary")
+                .body("1x Diamond Block (bottom)")
+                .blank()
+                .note("Gated behind Mining/Wheat/Cod/Bone Tier VI. Only one may ever stand in a world — a second refuses to place.")
+                .build());
+
+        p.add(new Page()
+                .heading("Four Branches")
+                .blank()
+                .body("Root: farmland protection & Verdant Aura")
+                .body("Stone: unlocks Vein Blast/Stoneflow & ore regrowth")
+                .body("Tide: Tidal Sight & Twin Current (see Twin Bite)")
+                .body("Ash: Marked Sense & Undying Resolve")
+                .blank()
+                .note("4 base talisman sockets, +1 per perk that grants one. Respeccing a branch refunds 75% of what you spent on it.")
+                .build());
+
+        p.add(new Page()
+                .heading("Talismans")
+                .blank()
+                .body("Sheaf-Token, Cutter's Charm, Angler's Knot,")
+                .body("Knucklebone, Wraith's Eye, Deepglass Lens.")
+                .blank()
+                .note("Each has a Sigil upgrade (crafted from the base talisman) that doubles its effect. Deepglass Lens is also the God Potion's Abyssal Pearl ingredient.")
+                .build());
+
+        // ---------------- XI. Threat ----------------
+
+        p.add(sectionHeader("XI", "Threat",
+                "The whole world's hostile mobs scale with how far along you are — no new mob types, just vanilla ones hitting harder."));
+
+        p.add(new Page()
+                .heading("How It's Measured")
+                .blank()
+                .body("Skill levels, gear tier, Heartwood progress, and bosses defeated all feed one 0-100 number.")
+                .blank()
+                .note("Run /greenward threat to check the current value. Higher Threat means tougher mobs but bigger drops and XP — only on a real melee/ranged kill you land yourself.")
+                .build());
+
+        // ---------------- XII. Villagers & Seals ----------------
+
+        p.add(sectionHeader("XII", "Villagers & Seals",
+                "A currency that only ever comes from doing right by a village."));
+
+        p.add(new Page()
+                .heading("Commissions")
+                .blank()
+                .body("Sneak + right-click any villager for a collection request tied to their profession. Turn in the goods for Seals.")
+                .blank()
+                .note("Seals can never be crafted, farmed by a machine, or bought — only earned this way.")
+                .build());
+
+        p.add(new Page()
+                .heading("Tempering")
+                .blank()
+                .body("At a crafting table: 1x gear (must already carry stats) + 1x Tempering Stone + 1x Seal.")
+                .blank()
+                .body("Seven Temperings: Keen, Sturdy, Bountiful, Deep, Briny, Swift, and Grim (a big offense boost with a real Health cost).")
+                .build());
+
+        // ---------------- XIII. Deeper Waters & Fields ----------------
+
+        p.add(sectionHeader("XIII", "Deeper Waters & Fields",
+                "Two small hazards/rewards layered onto farming and fishing once you're already deep into either."));
+
+        p.add(new Page()
+                .heading("Blight")
+                .blank()
+                .body("A small chance on every harvest of already-fertilized farmland to blight that soil — a blighted harvest earns zero Farming Fortune.")
+                .blank()
+                .note("Clear it with a hoe or bone meal on the farmland itself.")
+                .build());
+
+        p.add(new Page()
+                .heading("Twin Bite & the Catch Log")
+                .blank()
+                .body("Full Tidal or Leviathan Hunter's Wear (or the Heartwood's Twin Current node) gives a real chance at landing a second sea creature per catch.")
+                .blank()
+                .note("Every notable catch also grades itself live in chat — Modest, Fine, Superb, or Legendary.")
+                .build());
+
+        // ---------------- XIV. Endgame ----------------
+
+        p.add(sectionHeader("XIV", "Endgame",
+                "The Ender Dragon and Wither now answer to the same Threat system as everything else — just on a steeper curve."));
+
+        p.add(new Page()
+                .heading("The Rescaled Bosses")
+                .blank()
+                .body("Both scale their health far harder than an ordinary hostile at the same Threat. Killing either counts toward Threat's own boss tally.")
+                .blank()
+                .note("At Threat 75 or higher, a kill drops Boss Essence — the one ingredient in this whole mod that isn't farmable, mineable, fishable, or a Commission reward.")
+                .build());
+
+        // ---------------- XV. Beyond the Design ----------------
+
+        p.add(sectionHeader("XV", "Beyond the Design",
+                "Everything added after the original ten updates shipped."));
+
+        p.add(new Page()
+                .heading("Elytra Fusion")
+                .blank()
+                .body("At a smithing table: any chestplate + a vanilla Elytra. The chestplate keeps every stat, socket, and enchantment it already had — it just also glides now.")
+                .build());
+
+        p.add(new Page()
+                .title("Voidstep Blade")
+                .type("Shaped sword pattern")
+                .blank()
+                .body("2x Pearl Nexus (top two slots), 1x Stick.")
+                .blank()
+                .body("Pearl Nexus: 2x Pearl Cluster. Pearl Cluster: 2x Ender Pearl.")
+                .blank()
+                .note("Right-click to blink ~8 blocks along your look direction, stopping just short of a wall. No cooldown — click as fast as you like.")
+                .build());
+
+        p.add(new Page()
+                .title("Lava Fishing")
+                .type("Scorched Leviathan Rod")
+                .blank()
+                .body("Sacrifice a Leviathan Rod + 4x Blaze Rod + 2x Magma Cream + 1x Obsidian.")
+                .blank()
+                .body("Right-click while looking at lava to cast a line — no bobber, just wait for the tug. Best catch: a Magma Wyrm, dropping the rare Cinder Heart.")
+                .build());
+
+        p.add(new Page()
+                .heading("A Place to See It All")
+                .blank()
+                .body("Run /greenward stats at any time to open a book listing every one of your stats and exactly which piece of gear, skill, or perk is contributing to each.")
+                .build());
+
+        p.add(new Page()
+                .heading("World Threat: Off By Default")
+                .blank()
+                .body("Mob scaling stays off — vanilla difficulty — until you place a Heartwood and flip its Threat toggle on. Turning it back off any time is free.")
+                .build());
+
+        p.add(new Page()
+                .heading("The Coin Economy")
+                .blank()
+                .body("Craft a Coin Purse (Leather + Gold Ingot + Emerald) and wear it in your OFFHAND. Sneak-right-click any villager to open the Shop.")
+                .blank()
+                .note("Vanilla trading is completely unaffected — the Purse just adds a new option alongside it.")
+                .build());
+
+        p.add(new Page()
+                .heading("The Shop")
+                .blank()
+                .body("Sell slot: drop an item, hit Sell. Repair slot: drop a damaged item, hit Repair (1 Coin per missing durability). Buy: a Waystone, or a spare Coin Purse.")
+                .build());
+
+        p.add(new Page()
+                .heading("Waystones")
+                .blank()
+                .body("Craft one (Obsidian + Amethyst Shard + Ender Pearl) — or buy one at the Shop. Right-click to bind, right-click a bound one again to travel to any other you know.")
+                .build());
+
+        p.add(new Page()
+                .heading("Slayers")
+                .blank()
+                .body("Craft a Horn (needs a Seal) and right-click to summon a buffed boss version of that mob.")
+                .blank()
+                .body("Rotten Colossus, Bonebreaker, Broodmother, Fulminant, Voidcaller — kill one for Coins, a guaranteed drop, and Combat XP.")
                 .build());
 
         p.add(new Page()

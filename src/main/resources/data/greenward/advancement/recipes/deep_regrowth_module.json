@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "diamond_tier_6": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "diamond",
+        "tier": 6
+      }
+    }
+  },
+  "requirements": [["diamond_tier_6"]],
+  "rewards": { "recipes": ["greenward:deep_regrowth_module"] }
+}

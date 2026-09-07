@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "greenward:block/bonepile_effigy"
+    },
+    "lit=true": {
+      "model": "greenward:block/bonepile_effigy_lit"
+    }
+  }
+}

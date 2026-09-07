@@ -1,0 +1,22 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "bone_tier_6": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "bone",
+        "tier": 6
+      }
+    }
+  },
+  "requirements": [
+    [
+      "bone_tier_6"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:ossuary_satchel"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fine_sapphire": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:fine_sapphire"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fine_sapphire"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:flawless_sapphire"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:rotten_flesh",
+    "minecraft:rotten_flesh",
+    "minecraft:rotten_flesh",
+    "minecraft:bone",
+    "greenward:seal"
+  ],
+  "result": {
+    "id": "greenward:slayer_horn_zombie",
+    "count": 1
+  }
+}

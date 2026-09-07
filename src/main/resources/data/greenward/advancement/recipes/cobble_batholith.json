@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cobble_massif": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:cobble_massif"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cobble_massif"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:cobble_batholith"
+    ]
+  }
+}

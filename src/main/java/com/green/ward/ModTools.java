@@ -18,6 +18,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -89,6 +90,14 @@ public final class ModTools {
     private static final ToolMaterial REAPERS_EDGE_MATERIAL =
             new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 2400, 9.0F, 5.0F, 15, REPAIRS_REAPERS_EDGE);
 
+    /** Post-Design-Program: the Voidstep Blade. Ender Pearls as the repair material fits
+     *  the item thematically; raw combat stats sit at Combat Tier I (diamond-equivalent) —
+     *  the item's real value is {@link VoidstepAbilityHandler}'s teleport, not its damage. */
+    private static final TagKey<Item> REPAIRS_VOIDSTEP_BLADE =
+            TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(ModItems.MOD_ID, "repairs_voidstep_blade"));
+    private static final ToolMaterial VOIDSTEP_BLADE_MATERIAL =
+            new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1200, 8.0F, 3.0F, 10, REPAIRS_VOIDSTEP_BLADE);
+
     public static Item HARVESTERS_SCYTHE;
     public static Item PROSPECTORS_DRILL;
     public static Item ANGLERS_LINE;
@@ -108,6 +117,9 @@ public final class ModTools {
     public static Item ASHWROUGHT_EDGE;
     public static Item REAPERS_EDGE;
 
+    public static Item VOIDSTEP_BLADE;
+    public static Item SCORCHED_LEVIATHAN_ROD;
+
     public static void initialize() {
         if (!GreenwardConfig.ENABLE_CUSTOM_TOOLS) {
             return;
@@ -119,47 +131,66 @@ public final class ModTools {
 
         PROSPECTORS_DRILL = ModItems.register("prospectors_drill",
                 properties -> new Item(properties),
-                new Item.Properties().pickaxe(DRILL_MATERIAL, 1.0F, -2.8F));
+                new Item.Properties().pickaxe(DRILL_MATERIAL, 1.0F, -2.8F)
+                        .component(GreenwardComponents.STATS, Map.of(
+                                GreenwardStat.MINING_SPEED, 120.0,
+                                GreenwardStat.MINING_FORTUNE, 10.0)));
 
         ANGLERS_LINE = ModItems.register("anglers_line",
                 properties -> new FishingRodItem(properties),
                 new Item.Properties().durability(256).enchantable(1)
-                        .delayedComponent(DataComponents.ENCHANTMENTS, bakedEnchantments(Map.of(Enchantments.LURE, 1))));
+                        .delayedComponent(DataComponents.ENCHANTMENTS, bakedEnchantments(Map.of(Enchantments.LURE, 1)))
+                        .component(GreenwardComponents.STATS, Map.of(
+                                GreenwardStat.SEA_CREATURE_CHANCE, 5.0, GreenwardStat.FISHING_SPEED, 10.0)));
 
         DEEP_SEA_ROD = ModItems.register("deep_sea_rod",
                 properties -> new FishingRodItem(properties),
                 new Item.Properties().durability(512).enchantable(1)
                         .delayedComponent(DataComponents.ENCHANTMENTS,
-                                bakedEnchantments(Map.of(Enchantments.LURE, 2, Enchantments.LUCK_OF_THE_SEA, 1))));
+                                bakedEnchantments(Map.of(Enchantments.LURE, 2, Enchantments.LUCK_OF_THE_SEA, 1)))
+                        .component(GreenwardComponents.SOCKETS, new SocketData(2, List.of()))
+                        .component(GreenwardComponents.STATS, Map.of(
+                                GreenwardStat.SEA_CREATURE_CHANCE, 15.0, GreenwardStat.FISHING_SPEED, 20.0)));
 
         LEVIATHAN_ROD = ModItems.register("leviathan_rod",
                 properties -> new FishingRodItem(properties),
                 new Item.Properties().durability(1024).enchantable(1)
                         .delayedComponent(DataComponents.ENCHANTMENTS,
-                                bakedEnchantments(Map.of(Enchantments.LURE, 3, Enchantments.LUCK_OF_THE_SEA, 2))));
+                                bakedEnchantments(Map.of(Enchantments.LURE, 3, Enchantments.LUCK_OF_THE_SEA, 2)))
+                        .component(GreenwardComponents.STATS, Map.of(
+                                GreenwardStat.SEA_CREATURE_CHANCE, 30.0, GreenwardStat.FISHING_SPEED, 35.0))
+                        .component(GreenwardComponents.SOCKETS, new SocketData(3, List.of())));
 
         if (GreenwardConfig.ENABLE_FARMING_PROGRESSION) {
             CULTIVATORS_SCYTHE = ModItems.register("cultivators_scythe",
                     properties -> new HoeItem(CULTIVATORS_SCYTHE_MATERIAL, -3.0F, 0.0F, properties),
-                    new Item.Properties());
+                    new Item.Properties().component(GreenwardComponents.SOCKETS, new SocketData(2, List.of())));
 
             // Not registered through a crafting recipe — obtained via smithing_transform,
             // see data/greenward/recipe/harvest_warden.json.
             HARVEST_WARDEN = ModItems.register("harvest_warden",
                     properties -> new HoeItem(HARVEST_WARDEN_MATERIAL, -3.0F, 0.0F, properties),
-                    new Item.Properties());
+                    new Item.Properties().component(GreenwardComponents.SOCKETS, new SocketData(3, List.of())));
         }
 
         if (GreenwardConfig.ENABLE_MINING_PROGRESSION) {
             EXCAVATORS_PICK = ModItems.register("excavators_pick",
                     properties -> new Item(properties),
-                    new Item.Properties().pickaxe(EXCAVATORS_PICK_MATERIAL, 1.0F, -2.8F));
+                    new Item.Properties().pickaxe(EXCAVATORS_PICK_MATERIAL, 1.0F, -2.8F)
+                            .component(GreenwardComponents.STATS, Map.of(
+                                    GreenwardStat.MINING_SPEED, 260.0,
+                                    GreenwardStat.MINING_FORTUNE, 30.0))
+                            .component(GreenwardComponents.SOCKETS, new SocketData(2, List.of())));
 
             // Not registered through a crafting recipe — obtained via smithing_transform,
             // see data/greenward/recipe/bedrock_reaver.json.
             BEDROCK_REAVER = ModItems.register("bedrock_reaver",
                     properties -> new Item(properties),
-                    new Item.Properties().pickaxe(BEDROCK_REAVER_MATERIAL, 1.0F, -2.8F));
+                    new Item.Properties().pickaxe(BEDROCK_REAVER_MATERIAL, 1.0F, -2.8F)
+                            .component(GreenwardComponents.STATS, Map.of(
+                                    GreenwardStat.MINING_SPEED, 500.0,
+                                    GreenwardStat.MINING_FORTUNE, 60.0))
+                            .component(GreenwardComponents.SOCKETS, new SocketData(3, List.of())));
         }
 
         if (GreenwardConfig.ENABLE_COMBAT_PROGRESSION) {
@@ -169,13 +200,35 @@ public final class ModTools {
 
             ASHWROUGHT_EDGE = ModItems.register("ashwrought_edge",
                     properties -> new Item(properties),
-                    new Item.Properties().sword(ASHWROUGHT_EDGE_MATERIAL, 3.0F, -2.4F));
+                    new Item.Properties().sword(ASHWROUGHT_EDGE_MATERIAL, 3.0F, -2.4F)
+                            .component(GreenwardComponents.SOCKETS, new SocketData(2, List.of())));
 
             // Not registered through a crafting recipe — obtained via smithing_transform,
             // see data/greenward/recipe/reapers_edge.json.
             REAPERS_EDGE = ModItems.register("reapers_edge",
                     properties -> new Item(properties),
-                    new Item.Properties().sword(REAPERS_EDGE_MATERIAL, 3.0F, -2.4F));
+                    new Item.Properties().sword(REAPERS_EDGE_MATERIAL, 3.0F, -2.4F)
+                            .component(GreenwardComponents.SOCKETS, new SocketData(3, List.of())));
+        }
+
+        if (GreenwardConfig.ENABLE_VOIDSTEP) {
+            VOIDSTEP_BLADE = ModItems.register("voidstep_blade",
+                    properties -> new Item(properties),
+                    new Item.Properties().sword(VOIDSTEP_BLADE_MATERIAL, 3.0F, -2.4F));
+        }
+
+        if (GreenwardConfig.ENABLE_LAVA_FISHING) {
+            // Deliberately a plain Item, not FishingRodItem — vanilla's own use-action
+            // would try to cast a real FishingHook, which does nothing useful over lava
+            // and would fight with LavaFishingHandler's own UseItemCallback. Stats sit
+            // slightly above Leviathan Rod's (30/35) per the user's "should slightly
+            // surpass late game water fishing."
+            SCORCHED_LEVIATHAN_ROD = ModItems.register("scorched_leviathan_rod",
+                    properties -> new Item(properties),
+                    new Item.Properties().durability(1024)
+                            .component(GreenwardComponents.STATS, Map.of(
+                                    GreenwardStat.LAVA_CREATURE_CHANCE, 35.0, GreenwardStat.FISHING_SPEED, 40.0))
+                            .component(GreenwardComponents.SOCKETS, new SocketData(3, List.of())));
         }
     }
 

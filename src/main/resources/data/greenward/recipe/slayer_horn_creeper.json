@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:gunpowder",
+    "minecraft:gunpowder",
+    "minecraft:gunpowder",
+    "minecraft:gunpowder",
+    "greenward:seal"
+  ],
+  "result": {
+    "id": "greenward:slayer_horn_creeper",
+    "count": 1
+  }
+}

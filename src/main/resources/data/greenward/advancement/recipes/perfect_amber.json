@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_flawless_amber": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:flawless_amber"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_flawless_amber"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:perfect_amber"
+    ]
+  }
+}

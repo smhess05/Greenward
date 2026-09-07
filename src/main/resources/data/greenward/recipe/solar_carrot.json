@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:sunburst_carrot",
+    "greenward:sunburst_carrot",
+    "greenward:sunburst_carrot",
+    "greenward:sunburst_carrot",
+    "greenward:sunburst_carrot",
+    "greenward:sunburst_carrot",
+    "greenward:sunburst_carrot",
+    "greenward:sunburst_carrot",
+    "greenward:sunburst_carrot"
+  ],
+  "result": {
+    "id": "greenward:solar_carrot",
+    "count": 1
+  }
+}

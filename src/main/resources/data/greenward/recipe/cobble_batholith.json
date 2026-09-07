@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:cobble_massif",
+    "greenward:cobble_massif",
+    "greenward:cobble_massif",
+    "greenward:cobble_massif",
+    "greenward:cobble_massif",
+    "greenward:cobble_massif",
+    "greenward:cobble_massif",
+    "greenward:cobble_massif",
+    "greenward:cobble_massif"
+  ],
+  "result": {
+    "id": "greenward:cobble_batholith",
+    "count": 1
+  }
+}

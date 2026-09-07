@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:wheat",
+    "minecraft:potato",
+    "minecraft:carrot",
+    "greenward:wheat_sheaf",
+    "greenward:wheat_bale",
+    "greenward:wheat_rick",
+    "greenward:wheat_mow",
+    "greenward:potato_sack",
+    "greenward:potato_crate",
+    "greenward:potato_pallet",
+    "greenward:potato_granary",
+    "greenward:gilded_carrot",
+    "greenward:radiant_carrot",
+    "greenward:sunburst_carrot",
+    "greenward:solar_carrot"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:ender_pearl",
+    "minecraft:ender_pearl",
+    "greenward:seal"
+  ],
+  "result": {
+    "id": "greenward:slayer_horn_enderman",
+    "count": 1
+  }
+}

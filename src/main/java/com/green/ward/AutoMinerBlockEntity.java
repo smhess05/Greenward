@@ -27,20 +27,33 @@ import java.util.List;
 
 public class AutoMinerBlockEntity extends AbstractMachineBlockEntity {
 
+    /** Seed-slot acceptance only — a tag-of-tags union of common+precious. Ancient Debris
+     *  is deliberately in neither (Design Program Update 4 § 4.1① — Netherite stays
+     *  manual; an infinite tap on a tier-4 regen + tier-4 speed module would trivialize
+     *  the Deepstone Core and the God Potion behind it). */
     public static final TagKey<Block> REGENERABLE_ORES =
             TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(ModItems.MOD_ID, "regenerable_ores"));
+    public static final TagKey<Block> REGENERABLE_COMMON =
+            TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(ModItems.MOD_ID, "regenerable_common"));
+    public static final TagKey<Block> REGENERABLE_PRECIOUS =
+            TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(ModItems.MOD_ID, "regenerable_precious"));
 
     private static final int[] TICK_INTERVALS_BY_TIER = {60, 48, 36, 24, 15};
     private static final int[] REGEN_TICKS_BY_TIER = {200, 150, 100, 60, 30};
+    /** Precious-ore regrowth is 5× the common delay at every tier (§ 4.1②), and only
+     *  runs at all with a Deep Regrowth Module installed — see {@link #hasDeepRegrowthModule}. */
+    private static final int PRECIOUS_REGEN_MULTIPLIER = 5;
 
     private static final int DATA_REGEN_TICKS = BASE_DATA_COUNT;
     private static final int DATA_REGEN_MAX = BASE_DATA_COUNT + 1;
     static final int DATA_REGEN_TIER = BASE_DATA_COUNT + 2;
-    static final int DATA_COUNT = BASE_DATA_COUNT + 3;
+    static final int DATA_DEEP_REGROWTH = BASE_DATA_COUNT + 3;
+    static final int DATA_COUNT = BASE_DATA_COUNT + 4;
 
     private static final String TAG_REGEN_BLOCK = "regen_block";
     private static final String TAG_REGEN_TICKS = "regen_ticks_remaining";
     private static final String TAG_REGEN_TIER = "regen_tier";
+    private static final String TAG_DEEP_REGROWTH = "deep_regrowth_module";
     private static final String TAG_SEED = "seed";
 
     private final NonNullList<ItemStack> seed = NonNullList.withSize(1, ItemStack.EMPTY);
@@ -63,6 +76,7 @@ public class AutoMinerBlockEntity extends AbstractMachineBlockEntity {
     private Block regenBlock;
     private int regenTicksRemaining;
     private int regenTier;
+    private boolean hasDeepRegrowthModule;
 
     public AutoMinerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.AUTO_MINER, pos, state);
@@ -83,6 +97,20 @@ public class AutoMinerBlockEntity extends AbstractMachineBlockEntity {
 
     public int regenTier() {
         return regenTier;
+    }
+
+    /** One-shot, like Compression's install — no tiers, just installed or not. */
+    public boolean installDeepRegrowthModule() {
+        if (hasDeepRegrowthModule) {
+            return false;
+        }
+        hasDeepRegrowthModule = true;
+        setChanged();
+        return true;
+    }
+
+    public boolean hasDeepRegrowthModule() {
+        return hasDeepRegrowthModule;
     }
 
     @Override
@@ -123,13 +151,24 @@ public class AutoMinerBlockEntity extends AbstractMachineBlockEntity {
             return false;
         }
 
-        boolean isOre = targetState.is(REGENERABLE_ORES);
+        boolean isCommonOre = targetState.is(REGENERABLE_COMMON);
+        boolean isPreciousOre = targetState.is(REGENERABLE_PRECIOUS);
         List<ItemStack> drops = Block.getDrops(targetState, level, targetPos, null);
         depositOrDrop(level, pos, drops);
 
-        if (isOre) {
+        // Common ores always regrow on the base machine. Precious ores (gold/diamond/
+        // emerald) only regrow with a Deep Regrowth Module installed AND the Heartwood's
+        // Stone-branch "Regrowth Mastery" node unlocked (Update 6 § 6.2 — the module
+        // alone was the interim gate before the Heartwood existed; both are required
+        // now), and then at 5× the common delay (§ 4.1②) — without either, mining a
+        // precious ore is permanent, same as a player mining it by hand.
+        if (isCommonOre) {
             regenBlock = targetState.getBlock();
             regenTicksRemaining = REGEN_TICKS_BY_TIER[Math.min(regenTier, REGEN_TICKS_BY_TIER.length - 1)];
+        } else if (isPreciousOre && hasDeepRegrowthModule
+                && HeartwoodData.get(level.getServer()).isNodeUnlocked(HeartwoodBranch.STONE, HeartwoodBranch.STONE_REGROWTH_MASTERY)) {
+            regenBlock = targetState.getBlock();
+            regenTicksRemaining = REGEN_TICKS_BY_TIER[Math.min(regenTier, REGEN_TICKS_BY_TIER.length - 1)] * PRECIOUS_REGEN_MULTIPLIER;
         }
 
         level.removeBlock(targetPos, false);
@@ -159,8 +198,13 @@ public class AutoMinerBlockEntity extends AbstractMachineBlockEntity {
     @Override
     protected int getData(int index) {
         if (index == DATA_REGEN_TICKS) return regenTicksRemaining;
-        if (index == DATA_REGEN_MAX) return REGEN_TICKS_BY_TIER[Math.min(regenTier, REGEN_TICKS_BY_TIER.length - 1)];
+        if (index == DATA_REGEN_MAX) {
+            int base = REGEN_TICKS_BY_TIER[Math.min(regenTier, REGEN_TICKS_BY_TIER.length - 1)];
+            return regenBlock != null && regenBlock.defaultBlockState().is(REGENERABLE_PRECIOUS)
+                    ? base * PRECIOUS_REGEN_MULTIPLIER : base;
+        }
         if (index == DATA_REGEN_TIER) return regenTier;
+        if (index == DATA_DEEP_REGROWTH) return hasDeepRegrowthModule ? 1 : 0;
         return super.getData(index);
     }
 
@@ -170,6 +214,7 @@ public class AutoMinerBlockEntity extends AbstractMachineBlockEntity {
         ContainerHelper.loadAllItems(input.childOrEmpty(TAG_SEED), seed);
         regenTicksRemaining = input.getIntOr(TAG_REGEN_TICKS, 0);
         regenTier = Math.min(input.getIntOr(TAG_REGEN_TIER, 0), GreenwardConfig.MAX_REGEN_TIER);
+        hasDeepRegrowthModule = input.getBooleanOr(TAG_DEEP_REGROWTH, false);
         String blockId = input.getStringOr(TAG_REGEN_BLOCK, "");
         regenBlock = blockId.isEmpty() ? null : resolveBlock(blockId);
     }
@@ -180,6 +225,7 @@ public class AutoMinerBlockEntity extends AbstractMachineBlockEntity {
         ContainerHelper.saveAllItems(output.child(TAG_SEED), seed);
         output.putInt(TAG_REGEN_TICKS, regenTicksRemaining);
         output.putInt(TAG_REGEN_TIER, regenTier);
+        output.putBoolean(TAG_DEEP_REGROWTH, hasDeepRegrowthModule);
         if (regenBlock != null) {
             output.putString(TAG_REGEN_BLOCK, BuiltInRegistries.BLOCK.getKey(regenBlock).toString());
         }

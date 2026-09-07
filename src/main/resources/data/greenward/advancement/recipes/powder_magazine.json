@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_powder_cache": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:powder_cache"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_powder_cache"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:powder_magazine"
+    ]
+  }
+}

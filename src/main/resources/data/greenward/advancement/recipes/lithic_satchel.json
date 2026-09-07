@@ -1,0 +1,22 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "cobblestone_tier_6": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "cobblestone",
+        "tier": 6
+      }
+    }
+  },
+  "requirements": [
+    [
+      "cobblestone_tier_6"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:lithic_satchel"
+    ]
+  }
+}

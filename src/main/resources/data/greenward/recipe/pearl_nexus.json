@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:pearl_cluster",
+    "greenward:pearl_cluster"
+  ],
+  "result": {
+    "id": "greenward:pearl_nexus",
+    "count": 1
+  }
+}

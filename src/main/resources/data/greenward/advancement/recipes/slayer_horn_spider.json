@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_seal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:seal"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_seal"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:slayer_horn_spider"
+    ]
+  }
+}

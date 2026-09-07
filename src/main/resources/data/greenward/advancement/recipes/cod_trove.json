@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cod_haul": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:cod_haul"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cod_haul"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:cod_trove"
+    ]
+  }
+}

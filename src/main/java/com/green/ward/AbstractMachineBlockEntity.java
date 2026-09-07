@@ -39,27 +39,46 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
     public static final int FUEL_SLOT = 0;
     public static final int FIRST_STORAGE_SLOT = 1;
 
+    /** Repurposed for the duration-boost model (Update 4 § 4.2): the flame indicator now
+     *  shows how much of the CURRENT boost's duration remains, not an operation budget —
+     *  same visual meaning ("how much charge is left"), different underlying quantity. */
     private static final int DATA_OPERATIONS_REMAINING = 0;
     private static final int DATA_BURN_MAX = 1;
     private static final int DATA_PROGRESS = 2;
     private static final int DATA_PROGRESS_MAX = 3;
     private static final int DATA_STORAGE_TIER = 4;
     private static final int DATA_SPEED_TIER = 5;
-    protected static final int BASE_DATA_COUNT = 6;
+    private static final int DATA_COMPRESSION_TIER = 6;
+    protected static final int BASE_DATA_COUNT = 7;
 
-    private static final String TAG_OPERATIONS_REMAINING = "operations_remaining";
     private static final String TAG_TICKS_UNTIL_NEXT_OP = "ticks_until_next_op";
-    private static final String TAG_CURRENT_BURN_MAX = "current_burn_max";
     private static final String TAG_STORAGE_TIER = "storage_tier";
     private static final String TAG_SPEED_TIER = "speed_tier";
+    private static final String TAG_COMPRESSION_TIER = "compression_tier";
+    private static final String TAG_BOOST_PERCENT = "boost_percent";
+    private static final String TAG_BOOST_TICKS_REMAINING = "boost_ticks_remaining";
+    private static final String TAG_BOOST_DURATION_MAX = "boost_duration_max";
+    private static final String TAG_SUNWHEEL_INSTALLED = "sunwheel_installed";
+
+    /** 0 = raw output, 1 = Press installed (auto-compress to rung 1), 2 = Deep Press
+     *  installed (auto-compress to rung 2). Design Program Update 3 § 3.3. */
+    public static final int MAX_COMPRESSION_TIER = 2;
 
     private final NonNullList<ItemStack> fuel = NonNullList.withSize(1, ItemStack.EMPTY);
     private final NonNullList<ItemStack> storage = NonNullList.withSize(GreenwardConfig.MAX_STORAGE_SLOTS, ItemStack.EMPTY);
-    private int operationsRemaining;
     private int ticksUntilNextOp;
-    private int currentBurnMax;
     private int storageTier;
     private int speedTier;
+    private int compressionTier;
+
+    // --- Update 4 § 4.2 fuel-as-boost fields ---
+    private int boostPercent;
+    private int boostTicksRemaining;
+    private int boostDurationMax;
+    private boolean sunwheelInstalled;
+    /** Recomputed once per tick in {@link #tick} (needs the {@code ServerLevel} for the
+     *  Sunwheel's daylight check) and read by {@link #tickInterval()}. */
+    private int cachedEffectivePercent;
 
     private final ContainerData containerData = new ContainerData() {
         @Override
@@ -82,10 +101,25 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
         super(type, pos, state);
     }
 
+    /** Centralizes the removal side of {@link MachinePlacementGuard}'s placement caps
+     *  (Update 4 § 4.1③) for all three automation block types in one place, rather than
+     *  needing a matching override in each Block subclass — this fires exactly once
+     *  whenever a placed automation block leaves the world, by break, explosion, or
+     *  {@code /greenward decommission}. */
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        if (level instanceof ServerLevel serverLevel) {
+            MachinePlacementGuard.onRemoved(serverLevel, worldPosition);
+        }
+    }
+
     /** Base operation interval (in ticks) for each speed tier, index 0..MAX_SPEED_TIER. */
     protected abstract int[] tickIntervalsByTier();
 
-    /** @return true if work actually happened (so fuel is only consumed on real progress). */
+    /** @return true if work actually happened. Called every operation interval
+     *  regardless of fuel — Update 4 § 4.2 removed the old "must have fuel to run at
+     *  all" gate. Fuel is now purely a speed boost on top of the base rate. */
     protected abstract boolean doOperation(ServerLevel level, BlockPos pos, BlockState state);
 
     /** Called every single game tick (not gated by the operation interval); default no-op. */
@@ -94,7 +128,16 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
 
     private int tickInterval() {
         int[] intervals = tickIntervalsByTier();
-        return intervals[Math.min(speedTier, intervals.length - 1)];
+        int base = intervals[Math.min(speedTier, intervals.length - 1)];
+        if (cachedEffectivePercent <= 0) {
+            return base;
+        }
+        return Math.max(1, Math.round(base / (1.0F + cachedEffectivePercent / 100.0F)));
+    }
+
+    private static boolean isDaytime(ServerLevel level) {
+        long timeOfDay = level.getOverworldClockTime() % 24000L;
+        return timeOfDay < 12000L;
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, AbstractMachineBlockEntity be) {
@@ -103,36 +146,72 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
 
         be.tickEveryTick(serverLevel, pos, state);
 
+        if (be.boostTicksRemaining > 0) {
+            be.boostTicksRemaining--;
+            if (be.boostTicksRemaining == 0) {
+                be.boostPercent = 0;
+                be.boostDurationMax = 0;
+            }
+        }
+        int sunwheelBonus = be.sunwheelInstalled && isDaytime(serverLevel) ? AutomationFuel.boostPercent(ModItems.SUNWHEEL) : 0;
+        be.cachedEffectivePercent = Math.max(be.boostPercent, sunwheelBonus);
+
         if (be.ticksUntilNextOp > 0) {
             be.ticksUntilNextOp--;
         } else {
             be.ticksUntilNextOp = be.tickInterval();
 
-            if (be.operationsRemaining <= 0) {
-                be.refuel();
-            }
+            be.tryConsumeFuel();
 
-            if (be.operationsRemaining > 0 && !be.isStorageFull() && be.doOperation(serverLevel, pos, state)) {
-                be.operationsRemaining--;
+            if (!be.isStorageFull() && be.doOperation(serverLevel, pos, state)) {
                 be.setChanged();
             }
         }
 
-        boolean isLit = be.operationsRemaining > 0;
+        boolean isLit = be.cachedEffectivePercent > 0;
         if (isLit != wasLit) {
             level.setBlock(pos, state.setValue(BlockStateProperties.LIT, isLit), 3);
         }
     }
 
-    private void refuel() {
+    /** Consumes exactly one fuel item when doing so would actually help: the Sunwheel
+     *  installs once (idempotent, permanent); any other fuel tops up only when the
+     *  current boost has expired or the new item beats the active percentage — otherwise
+     *  it's left untouched in the slot rather than being wastefully eaten every interval. */
+    private void tryConsumeFuel() {
         ItemStack stack = fuel.get(0);
-        int value = AutomationFuel.burnValue(stack.getItem());
-        if (value <= 0) {
+        if (stack.isEmpty()) {
             return;
         }
-        operationsRemaining = value;
-        currentBurnMax = value;
+        if (AutomationFuel.isSunwheel(stack.getItem())) {
+            if (!sunwheelInstalled) {
+                sunwheelInstalled = true;
+                stack.shrink(1);
+                setChanged();
+            }
+            return;
+        }
+
+        int newPercent = AutomationFuel.boostPercent(stack.getItem());
+        if (newPercent <= 0) {
+            return;
+        }
+        if (boostTicksRemaining > 0 && newPercent <= boostPercent) {
+            return;
+        }
+
+        int newDuration = AutomationFuel.boostDuration(stack.getItem());
+        if (boostTicksRemaining <= 0) {
+            boostPercent = newPercent;
+            boostTicksRemaining = newDuration;
+            boostDurationMax = newDuration;
+        } else {
+            boostPercent = Math.max(boostPercent, newPercent);
+            boostTicksRemaining += newDuration;
+            boostDurationMax += newDuration;
+        }
         stack.shrink(1);
+        setChanged();
     }
 
     // --- Storage output ---
@@ -155,6 +234,10 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
     /** Deposits each stack into the first available unlocked storage slot, merging where possible.
      *  Anything that doesn't fit overflows as a dropped item above {@code pos} — items are never lost. */
     protected void depositOrDrop(ServerLevel level, BlockPos pos, List<ItemStack> drops) {
+        if (compressionTier > 0) {
+            drops = applyCompression(drops);
+        }
+
         int unlocked = unlockedStorageSlots();
         for (ItemStack drop : drops) {
             ItemStack remaining = drop.copy();
@@ -178,6 +261,70 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
             }
         }
         setChanged();
+    }
+
+    /**
+     * Press/Deep Press (Design Program Update 3 § 3.3). For each drop that's a raw
+     * collection item with a known chain, folds it together with whatever raw (and, at
+     * tier 2, rung-1) stock is already sitting in this machine's storage, and re-expresses
+     * the combined total as the fewest possible items at the machine's compression tier —
+     * e.g. 47 raw wheat already in storage plus 9 more freshly harvested becomes 6 Wheat
+     * Sheaf + 2 raw wheat, not 56 raw wheat sitting there uncompressed. Anything without a
+     * known chain (most ores, fish, mob drops) passes through completely untouched.
+     */
+    private List<ItemStack> applyCompression(List<ItemStack> drops) {
+        List<ItemStack> result = new java.util.ArrayList<>();
+        for (ItemStack drop : drops) {
+            GreenwardCollection collection = CompressionLadder.collectionForRawItem(drop.getItem());
+            net.minecraft.world.item.Item rung1 = collection == null ? null : CompressionLadder.rung1For(collection);
+            if (collection == null || rung1 == null) {
+                result.add(drop);
+                continue;
+            }
+
+            long rawTotal = removeAllFromStorage(drop.getItem()) + drop.getCount();
+            long rung1Count = rawTotal / 9;
+            long rawRemainder = rawTotal % 9;
+
+            net.minecraft.world.item.Item rung2 = compressionTier >= 2 ? CompressionLadder.rung2For(collection) : null;
+            if (rung2 != null) {
+                long rung1Total = removeAllFromStorage(rung1) + rung1Count;
+                long rung2Count = rung1Total / 9;
+                long rung1Remainder = rung1Total % 9;
+                addAsStacks(result, rung2, rung2Count);
+                addAsStacks(result, rung1, rung1Remainder);
+            } else {
+                addAsStacks(result, rung1, rung1Count);
+            }
+            addAsStacks(result, drop.getItem(), rawRemainder);
+        }
+        return result;
+    }
+
+    /** Removes every stack of {@code item} from storage (so it can be re-expressed as a
+     *  compressed total) and returns how many were removed. */
+    private long removeAllFromStorage(net.minecraft.world.item.Item item) {
+        long total = 0;
+        for (int i = 0; i < storage.size(); i++) {
+            ItemStack stack = storage.get(i);
+            if (!stack.isEmpty() && stack.is(item)) {
+                total += stack.getCount();
+                storage.set(i, ItemStack.EMPTY);
+            }
+        }
+        return total;
+    }
+
+    private static void addAsStacks(List<ItemStack> result, net.minecraft.world.item.Item item, long count) {
+        if (item == null || count <= 0) {
+            return;
+        }
+        int maxStack = new ItemStack(item).getMaxStackSize();
+        while (count > 0) {
+            int chunk = (int) Math.min(count, maxStack);
+            result.add(new ItemStack(item, chunk));
+            count -= chunk;
+        }
     }
 
     // --- Upgrades ---
@@ -208,6 +355,21 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
         return true;
     }
 
+    public int compressionTier() {
+        return compressionTier;
+    }
+
+    /** Press sets target 1, Deep Press sets target 2 — dropping either only ever raises
+     *  the tier, and Deep Press can be applied directly without Press first. */
+    public boolean setCompressionTier(int target) {
+        if (target <= compressionTier || target > MAX_COMPRESSION_TIER) {
+            return false;
+        }
+        compressionTier = target;
+        setChanged();
+        return true;
+    }
+
     // --- GUI data sync (see subclasses for any additional indices beyond BASE_DATA_COUNT) ---
 
     protected int dataCount() {
@@ -216,12 +378,13 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
 
     protected int getData(int index) {
         switch (index) {
-            case DATA_OPERATIONS_REMAINING: return operationsRemaining;
-            case DATA_BURN_MAX: return currentBurnMax;
+            case DATA_OPERATIONS_REMAINING: return boostTicksRemaining;
+            case DATA_BURN_MAX: return boostDurationMax;
             case DATA_PROGRESS: return tickInterval() - ticksUntilNextOp;
             case DATA_PROGRESS_MAX: return tickInterval();
             case DATA_STORAGE_TIER: return storageTier;
             case DATA_SPEED_TIER: return speedTier;
+            case DATA_COMPRESSION_TIER: return compressionTier;
             default: return 0;
         }
     }
@@ -253,11 +416,14 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
         for (int i = 0; i < storage.size(); i++) {
             storage.set(i, loaded.get(1 + i));
         }
-        operationsRemaining = input.getIntOr(TAG_OPERATIONS_REMAINING, 0);
         ticksUntilNextOp = input.getIntOr(TAG_TICKS_UNTIL_NEXT_OP, 0);
-        currentBurnMax = input.getIntOr(TAG_CURRENT_BURN_MAX, 0);
         storageTier = Math.min(input.getIntOr(TAG_STORAGE_TIER, 0), GreenwardConfig.MAX_STORAGE_TIER);
         speedTier = Math.min(input.getIntOr(TAG_SPEED_TIER, 0), GreenwardConfig.MAX_SPEED_TIER);
+        compressionTier = Math.min(input.getIntOr(TAG_COMPRESSION_TIER, 0), MAX_COMPRESSION_TIER);
+        boostPercent = input.getIntOr(TAG_BOOST_PERCENT, 0);
+        boostTicksRemaining = input.getIntOr(TAG_BOOST_TICKS_REMAINING, 0);
+        boostDurationMax = input.getIntOr(TAG_BOOST_DURATION_MAX, 0);
+        sunwheelInstalled = input.getBooleanOr(TAG_SUNWHEEL_INSTALLED, false);
     }
 
     @Override
@@ -269,11 +435,14 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
             combined.set(1 + i, storage.get(i));
         }
         ContainerHelper.saveAllItems(output, combined);
-        output.putInt(TAG_OPERATIONS_REMAINING, operationsRemaining);
         output.putInt(TAG_TICKS_UNTIL_NEXT_OP, ticksUntilNextOp);
-        output.putInt(TAG_CURRENT_BURN_MAX, currentBurnMax);
         output.putInt(TAG_STORAGE_TIER, storageTier);
         output.putInt(TAG_SPEED_TIER, speedTier);
+        output.putInt(TAG_COMPRESSION_TIER, compressionTier);
+        output.putInt(TAG_BOOST_PERCENT, boostPercent);
+        output.putInt(TAG_BOOST_TICKS_REMAINING, boostTicksRemaining);
+        output.putInt(TAG_BOOST_DURATION_MAX, boostDurationMax);
+        output.putBoolean(TAG_SUNWHEEL_INSTALLED, sunwheelInstalled);
     }
 
     // --- WorldlyContainer: hoppers may push fuel into slot 0 and pull finished goods

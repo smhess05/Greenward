@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:bone",
+    "minecraft:gunpowder",
+    "greenward:bone_bundle",
+    "greenward:bone_reliquary",
+    "greenward:bone_charnel",
+    "greenward:bone_ossuary",
+    "greenward:powder_satchel",
+    "greenward:powder_cache",
+    "greenward:powder_magazine",
+    "greenward:powder_arsenal"
+  ]
+}

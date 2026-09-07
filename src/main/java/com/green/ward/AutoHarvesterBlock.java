@@ -42,6 +42,15 @@ public class AutoHarvesterBlock extends BaseEntityBlock {
     }
 
     @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state,
+                             net.minecraft.world.entity.LivingEntity placer, net.minecraft.world.item.ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            MachinePlacementGuard.enforceOnPlace(serverLevel, pos, placer, stack, this);
+        }
+    }
+
+    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof MenuProvider provider) {
             player.openMenu(provider);

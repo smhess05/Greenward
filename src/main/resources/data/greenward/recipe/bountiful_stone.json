@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:iron_ingot",
+    "minecraft:wheat_seeds",
+    "minecraft:wheat_seeds"
+  ],
+  "result": {
+    "id": "greenward:bountiful_stone",
+    "count": 1
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_rough_ruby": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:rough_ruby"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_rough_ruby"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:fine_ruby"
+    ]
+  }
+}

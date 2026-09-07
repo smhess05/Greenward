@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:bone",
+    "minecraft:bone",
+    "minecraft:bone",
+    "minecraft:arrow",
+    "greenward:seal"
+  ],
+  "result": {
+    "id": "greenward:slayer_horn_skeleton",
+    "count": 1
+  }
+}

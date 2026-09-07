@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal"
+  ],
+  "result": {
+    "id": "greenward:cod_haul",
+    "count": 1
+  }
+}

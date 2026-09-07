@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fine_jade": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:fine_jade"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fine_jade"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:flawless_jade"
+    ]
+  }
+}

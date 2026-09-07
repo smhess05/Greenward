@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:flawless_sapphire",
+    "minecraft:prismarine_shard",
+    "minecraft:prismarine_shard"
+  ],
+  "result": {
+    "id": "greenward:deepglass_lens",
+    "count": 1
+  }
+}

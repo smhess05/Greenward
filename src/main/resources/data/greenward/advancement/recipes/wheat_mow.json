@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_wheat_rick": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:wheat_rick"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_wheat_rick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:wheat_mow"
+    ]
+  }
+}

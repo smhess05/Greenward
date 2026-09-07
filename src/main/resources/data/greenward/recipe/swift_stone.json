@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:iron_ingot",
+    "minecraft:feather",
+    "minecraft:feather"
+  ],
+  "result": {
+    "id": "greenward:swift_stone",
+    "count": 1
+  }
+}

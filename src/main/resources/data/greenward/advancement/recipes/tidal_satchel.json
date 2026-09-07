@@ -1,0 +1,22 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "cod_tier_6": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "cod",
+        "tier": 6
+      }
+    }
+  },
+  "requirements": [
+    [
+      "cod_tier_6"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:tidal_satchel"
+    ]
+  }
+}

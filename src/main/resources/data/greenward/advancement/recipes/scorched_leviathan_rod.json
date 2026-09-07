@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_leviathan_rod": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:leviathan_rod"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_leviathan_rod"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:scorched_leviathan_rod"
+    ]
+  }
+}

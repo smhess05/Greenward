@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:knucklebone",
+    "greenward:bone_ossuary",
+    "greenward:bone_ossuary"
+  ],
+  "result": {
+    "id": "greenward:knucklebone_sigil",
+    "count": 1
+  }
+}

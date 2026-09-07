@@ -6,35 +6,68 @@ import net.minecraft.world.item.Items;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Central fuel registry for all automation blocks. */
+/**
+ * Central fuel registry for all automation blocks — Design Program Update 4 § 4.2.
+ * Fuel is a temporary SPEED BOOST, not an operation budget: an unfueled machine still
+ * runs forever at its base rate (see {@link AbstractMachineBlockEntity}), and dropping a
+ * fuel item into the fuel slot consumes it instantly for a percentage speed bonus that
+ * decays over real time rather than being spent operation-by-operation. This replaces the
+ * old op-counter model entirely — fuel upgrades throughput, it no longer gates it.
+ */
 public final class AutomationFuel {
     private AutomationFuel() {}
 
-    private static final Map<Item, Integer> BURN_VALUES = new HashMap<>();
+    private static final Map<Item, Integer> BOOST_PERCENT = new HashMap<>();
+    private static final Map<Item, Integer> BOOST_DURATION_TICKS = new HashMap<>();
+
+    private static final int MINUTES = 1200; // 60 seconds * 20 ticks
 
     static {
-        BURN_VALUES.put(Items.COAL, 8);
-        BURN_VALUES.put(Items.CHARCOAL, 8);
-        BURN_VALUES.put(Items.COAL_BLOCK, 80);
-        BURN_VALUES.put(Items.DRIED_KELP, 4);
-        BURN_VALUES.put(Items.DRIED_KELP_BLOCK, 40);
+        put(Items.COAL, 5, 30 * MINUTES);
+        put(Items.CHARCOAL, 5, 30 * MINUTES);
+        put(Items.COAL_BLOCK, 5, 4 * 60 * MINUTES);
+        put(Items.DRIED_KELP_BLOCK, 8, 60 * MINUTES);
+        put(Items.LAVA_BUCKET, 25, 12 * 60 * MINUTES);
+
         if (GreenwardConfig.ENABLE_WHEAT_COMPRESSION && ModBlocks.WHEAT_BALE_BLOCK != null) {
-            BURN_VALUES.put(ModBlocks.WHEAT_BALE_BLOCK.asItem(), 100);
+            put(ModBlocks.WHEAT_BALE_BLOCK.asItem(), 10, 2 * 60 * MINUTES);
         }
-        // Potato Crate is the same kind of dense, farmable organic bale as Wheat Bale —
-        // keeps the fuel economy scaling once a player reaches Farming Tier II instead of
-        // capping out at whatever Wheat Bale alone provides.
         if (GreenwardConfig.ENABLE_FARMING_PROGRESSION && ModItems.POTATO_CRATE != null) {
-            BURN_VALUES.put(ModItems.POTATO_CRATE, 100);
+            put(ModItems.POTATO_CRATE, 10, 2 * 60 * MINUTES);
+        }
+        if (GreenwardConfig.ENABLE_WHEAT_COMPRESSION && ModItems.WHEAT_RICK != null) {
+            put(ModItems.WHEAT_RICK, 15, 6 * 60 * MINUTES);
+        }
+        if (GreenwardConfig.ENABLE_FARMING_PROGRESSION && ModItems.POTATO_PALLET != null) {
+            put(ModItems.POTATO_PALLET, 15, 6 * 60 * MINUTES);
         }
     }
 
-    /** @return number of operations this item powers, or 0 if not a fuel. */
-    public static int burnValue(Item item) {
-        return BURN_VALUES.getOrDefault(item, 0);
+    private static void put(Item item, int percent, int durationTicks) {
+        BOOST_PERCENT.put(item, percent);
+        BOOST_DURATION_TICKS.put(item, durationTicks);
+    }
+
+    /** @return the speed-boost percentage this item grants, or 0 if not a fuel. */
+    public static int boostPercent(Item item) {
+        if (item == ModItems.SUNWHEEL) {
+            return 25;
+        }
+        return BOOST_PERCENT.getOrDefault(item, 0);
+    }
+
+    /** @return how long (ticks) one item's boost lasts. Meaningless for the Sunwheel,
+     *  whose effect is permanent — see {@link AbstractMachineBlockEntity}'s separate
+     *  handling of {@code sunwheelInstalled}. */
+    public static int boostDuration(Item item) {
+        return BOOST_DURATION_TICKS.getOrDefault(item, 0);
     }
 
     public static boolean isFuel(Item item) {
-        return burnValue(item) > 0;
+        return item == ModItems.SUNWHEEL || boostPercent(item) > 0;
+    }
+
+    public static boolean isSunwheel(Item item) {
+        return item == ModItems.SUNWHEEL;
     }
 }

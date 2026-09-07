@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fine_amber": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:fine_amber"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fine_amber"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:flawless_amber"
+    ]
+  }
+}

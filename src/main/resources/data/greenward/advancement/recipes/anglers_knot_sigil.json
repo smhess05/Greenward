@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_anglers_knot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:anglers_knot"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_anglers_knot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:anglers_knot_sigil"
+    ]
+  }
+}

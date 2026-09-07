@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_bone_charnel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:bone_charnel"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_bone_charnel"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:bone_ossuary"
+    ]
+  }
+}

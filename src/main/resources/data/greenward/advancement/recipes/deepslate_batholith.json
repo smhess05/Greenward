@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_deepslate_massif": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:deepslate_massif"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_deepslate_massif"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:deepslate_batholith"
+    ]
+  }
+}

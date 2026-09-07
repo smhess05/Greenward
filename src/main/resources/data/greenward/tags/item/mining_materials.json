@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:cobblestone",
+    "minecraft:cobbled_deepslate",
+    "minecraft:diamond",
+    "greenward:cobble_cluster",
+    "greenward:cobble_monolith",
+    "greenward:cobble_massif",
+    "greenward:cobble_batholith",
+    "greenward:deepslate_cluster",
+    "greenward:deepslate_monolith",
+    "greenward:deepslate_massif",
+    "greenward:deepslate_batholith"
+  ]
+}

@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "RRR",
     "R R",
-    "  P"
+    "RPR",
+    "RRR"
   ],
   "key": {
     "R": "greenward:bone_reliquary",

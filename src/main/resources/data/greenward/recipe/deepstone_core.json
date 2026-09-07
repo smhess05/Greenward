@@ -1,14 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "ODO",
+    "GDO",
     "DND",
     "ODO"
   ],
   "key": {
     "O": "minecraft:obsidian",
     "D": "minecraft:diamond",
-    "N": "minecraft:netherite_scrap"
+    "N": "minecraft:netherite_scrap",
+    "G": "#greenward:perfect_gems"
   },
   "result": {
     "id": "greenward:deepstone_core",

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:powder_cache",
+    "greenward:powder_cache",
+    "greenward:powder_cache",
+    "greenward:powder_cache",
+    "greenward:powder_cache",
+    "greenward:powder_cache",
+    "greenward:powder_cache",
+    "greenward:powder_cache",
+    "greenward:powder_cache"
+  ],
+  "result": {
+    "id": "greenward:powder_magazine",
+    "count": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "greenward:block/volatile_effigy"
+    },
+    "lit=true": {
+      "model": "greenward:block/volatile_effigy_lit"
+    }
+  }
+}

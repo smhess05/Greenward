@@ -23,6 +23,13 @@ public class ModBlocks {
     public static Block AUTO_HARVESTER;
     public static Block AUTO_MINER;
     public static Block AUTO_FISHER;
+    public static Block ROTTING_EFFIGY;
+    public static Block BONEPILE_EFFIGY;
+    public static Block WEBBED_EFFIGY;
+    public static Block VOLATILE_EFFIGY;
+    public static Block VOID_EFFIGY;
+    public static Block HEARTWOOD;
+    public static Block WAYSTONE;
 
     public static Block register(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {
         // Two keys: one for the BLOCK registry, one for the ITEM registry.
@@ -77,6 +84,37 @@ public class ModBlocks {
                     BlockBehaviour.Properties.of()
                         .strength(3.5f)
                         .sound(SoundType.METAL)
+                        .requiresCorrectToolForDrops());
+        }
+
+        if (GreenwardConfig.ENABLE_EFFIGIES) {
+            ROTTING_EFFIGY = register("rotting_effigy", properties -> new EffigyBlock(EffigyType.ROTTING, properties),
+                    BlockBehaviour.Properties.of().strength(3.0f).sound(SoundType.WOOD).requiresCorrectToolForDrops());
+            BONEPILE_EFFIGY = register("bonepile_effigy", properties -> new EffigyBlock(EffigyType.BONEPILE, properties),
+                    BlockBehaviour.Properties.of().strength(3.0f).sound(SoundType.WOOD).requiresCorrectToolForDrops());
+            WEBBED_EFFIGY = register("webbed_effigy", properties -> new EffigyBlock(EffigyType.WEBBED, properties),
+                    BlockBehaviour.Properties.of().strength(3.0f).sound(SoundType.WOOD).requiresCorrectToolForDrops());
+            VOLATILE_EFFIGY = register("volatile_effigy", properties -> new EffigyBlock(EffigyType.VOLATILE, properties),
+                    BlockBehaviour.Properties.of().strength(3.0f).sound(SoundType.WOOD).requiresCorrectToolForDrops());
+            VOID_EFFIGY = register("void_effigy", properties -> new EffigyBlock(EffigyType.VOID, properties),
+                    BlockBehaviour.Properties.of().strength(3.0f).sound(SoundType.WOOD).requiresCorrectToolForDrops());
+        }
+
+        if (GreenwardConfig.ENABLE_HEARTWOOD) {
+            HEARTWOOD = register("heartwood", HeartwoodBlock::new,
+                    BlockBehaviour.Properties.of()
+                        .strength(5.0f)
+                        .sound(SoundType.WOOD)
+                        .lightLevel(state -> 7)
+                        .requiresCorrectToolForDrops());
+        }
+
+        if (GreenwardConfig.ENABLE_ECONOMY) {
+            WAYSTONE = register("waystone", WaystoneBlock::new,
+                    BlockBehaviour.Properties.of()
+                        .strength(4.0f)
+                        .sound(SoundType.AMETHYST)
+                        .lightLevel(state -> 6)
                         .requiresCorrectToolForDrops());
         }
     }

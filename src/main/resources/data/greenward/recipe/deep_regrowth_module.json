@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DGD",
+    "G E",
+    "DGD"
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "G": "minecraft:gold_ingot",
+    "E": "minecraft:emerald"
+  },
+  "result": { "id": "greenward:deep_regrowth_module", "count": 1 }
+}

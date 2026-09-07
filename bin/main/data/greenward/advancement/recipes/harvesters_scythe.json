@@ -1,20 +1,17 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_wheat_bale": {
-      "trigger": "minecraft:inventory_changed",
+    "wheat_tier_4": {
+      "trigger": "greenward:tier_reached",
       "conditions": {
-        "items": [
-          {
-            "items": "greenward:wheat_bale"
-          }
-        ]
+        "collection": "wheat",
+        "tier": 4
       }
     }
   },
   "requirements": [
     [
-      "has_wheat_bale"
+      "wheat_tier_4"
     ]
   ],
   "rewards": {

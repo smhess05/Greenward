@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IWI",
+    "CFB",
+    "IDI"
+  ],
+  "key": {
+    "I": "minecraft:iron_block",
+    "W": "greenward:wheat_bale",
+    "C": "greenward:cobble_monolith",
+    "F": "greenward:cod_shoal",
+    "B": "greenward:bone_reliquary",
+    "D": "minecraft:diamond_block"
+  },
+  "result": {
+    "id": "greenward:heartwood",
+    "count": 1
+  }
+}

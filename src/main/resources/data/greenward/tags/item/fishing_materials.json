@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:cod",
+    "greenward:cod_school",
+    "greenward:cod_shoal",
+    "greenward:cod_haul",
+    "greenward:cod_trove"
+  ]
+}

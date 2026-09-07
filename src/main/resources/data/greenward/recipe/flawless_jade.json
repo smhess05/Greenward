@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:fine_jade",
+    "greenward:fine_jade",
+    "greenward:fine_jade",
+    "greenward:fine_jade",
+    "greenward:fine_jade"
+  ],
+  "result": {
+    "id": "greenward:flawless_jade",
+    "count": 1
+  }
+}

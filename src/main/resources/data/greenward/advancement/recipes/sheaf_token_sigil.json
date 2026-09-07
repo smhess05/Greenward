@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_sheaf_token": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:sheaf_token"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_sheaf_token"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:sheaf_token_sigil"
+    ]
+  }
+}

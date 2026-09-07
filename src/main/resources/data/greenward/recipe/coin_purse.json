@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LGL",
+    "LEL",
+    " L "
+  ],
+  "key": {
+    "L": "minecraft:leather",
+    "G": "minecraft:gold_ingot",
+    "E": "minecraft:emerald"
+  },
+  "result": {
+    "id": "greenward:coin_purse",
+    "count": 1
+  }
+}

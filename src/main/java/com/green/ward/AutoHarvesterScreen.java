@@ -14,7 +14,8 @@ public class AutoHarvesterScreen extends AbstractMachineScreen<AutoHarvesterMenu
     private static final List<SlotLabel> LABELS = List.of(
             new SlotLabel(AbstractMachineMenu.FUEL_X, "Fuel", -1, -1),
             new SlotLabel(AbstractMachineMenu.UPGRADE_STORAGE_X, "Storage", AbstractMachineMenu.DATA_STORAGE_TIER, GreenwardConfig.MAX_STORAGE_TIER),
-            new SlotLabel(AbstractMachineMenu.UPGRADE_SPEED_X, "Speed", AbstractMachineMenu.DATA_SPEED_TIER, GreenwardConfig.MAX_SPEED_TIER)
+            new SlotLabel(AbstractMachineMenu.UPGRADE_SPEED_X, "Speed", AbstractMachineMenu.DATA_SPEED_TIER, GreenwardConfig.MAX_SPEED_TIER),
+            new SlotLabel(AbstractMachineMenu.UPGRADE_COMPRESSION_X, "Press", AbstractMachineMenu.DATA_COMPRESSION_TIER, AbstractMachineBlockEntity.MAX_COMPRESSION_TIER)
     );
 
     public AutoHarvesterScreen(AutoHarvesterMenu menu, Inventory inventory, Component title) {

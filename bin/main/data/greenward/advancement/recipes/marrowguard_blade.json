@@ -1,20 +1,17 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_bone_bundle": {
-      "trigger": "minecraft:inventory_changed",
+    "bone_tier_4": {
+      "trigger": "greenward:tier_reached",
       "conditions": {
-        "items": [
-          {
-            "items": "greenward:bone_bundle"
-          }
-        ]
+        "collection": "bone",
+        "tier": 4
       }
     }
   },
   "requirements": [
     [
-      "has_bone_bundle"
+      "bone_tier_4"
     ]
   ],
   "rewards": {

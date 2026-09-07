@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:fine_ruby",
+    "greenward:fine_ruby",
+    "greenward:fine_ruby",
+    "greenward:fine_ruby",
+    "greenward:fine_ruby"
+  ],
+  "result": {
+    "id": "greenward:flawless_ruby",
+    "count": 1
+  }
+}

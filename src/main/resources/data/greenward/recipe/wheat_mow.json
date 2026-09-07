@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:wheat_rick",
+    "greenward:wheat_rick",
+    "greenward:wheat_rick",
+    "greenward:wheat_rick",
+    "greenward:wheat_rick",
+    "greenward:wheat_rick",
+    "greenward:wheat_rick",
+    "greenward:wheat_rick",
+    "greenward:wheat_rick"
+  ],
+  "result": {
+    "id": "greenward:wheat_mow",
+    "count": 1
+  }
+}

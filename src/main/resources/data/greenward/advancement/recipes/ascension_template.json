@@ -1,20 +1,17 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_obsidian": {
-      "trigger": "minecraft:inventory_changed",
+    "diamond_tier_6": {
+      "trigger": "greenward:tier_reached",
       "conditions": {
-        "items": [
-          {
-            "items": "minecraft:obsidian"
-          }
-        ]
+        "collection": "diamond",
+        "tier": 6
       }
     }
   },
   "requirements": [
     [
-      "has_obsidian"
+      "diamond_tier_6"
     ]
   ],
   "rewards": {

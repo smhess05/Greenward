@@ -40,9 +40,18 @@ public abstract class AbstractMachineMenu extends AbstractContainerMenu {
     protected static final int UPGRADE_SPEED_X = 80;
     protected static final int UPGRADE_REGEN_X = 116;
     protected static final int SEED_X = 152;
+    /** The Auto-Harvester/Auto-Fisher never had a Regen slot, so Compression reuses that
+     *  column for them. The Auto-Miner already fills all of fuel/storage/speed/regen/seed,
+     *  so it gets Compression as a new 6th position instead — see {@link #UPGRADE_COMPRESSION_MINER_X}. */
+    protected static final int UPGRADE_COMPRESSION_X = 116;
+    protected static final int UPGRADE_COMPRESSION_MINER_X = 188;
+    /** Auto-Miner only — Deep Regrowth Module (Update 4 § 4.1②), an 8th special-slot
+     *  position past Compression's 188. */
+    protected static final int UPGRADE_DEEP_REGROWTH_MINER_X = 224;
 
     static final int DATA_STORAGE_TIER = 4;
     static final int DATA_SPEED_TIER = 5;
+    static final int DATA_COMPRESSION_TIER = 6;
 
     protected final Container container;
     protected final ContainerData data;
@@ -60,11 +69,19 @@ public abstract class AbstractMachineMenu extends AbstractContainerMenu {
     }
 
     protected void addUpgradeSlot(int x, int y, Item requiredItem, Runnable onUpgrade) {
-        Container instant = new InstantConsumeContainer(requiredItem, onUpgrade);
+        addUpgradeSlot(x, y, stack -> stack.is(requiredItem), stack -> onUpgrade.run());
+    }
+
+    /** For an upgrade axis with more than one accepted item at different target tiers
+     *  (Press vs. Deep Press) — {@code onUpgrade} receives the actual item inserted so the
+     *  caller can decide which target tier it maps to. */
+    protected void addUpgradeSlot(int x, int y, java.util.function.Predicate<ItemStack> accepts,
+                                   java.util.function.Consumer<ItemStack> onUpgrade) {
+        Container instant = new InstantConsumeContainer(accepts, onUpgrade);
         addSlot(new Slot(instant, 0, x, y) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.is(requiredItem);
+                return accepts.test(stack);
             }
 
             @Override
@@ -157,13 +174,14 @@ public abstract class AbstractMachineMenu extends AbstractContainerMenu {
     }
 
     /** Backing "container" for an upgrade slot: never actually holds anything — inserting
-     *  the correct item instantly applies the upgrade and the slot reports empty again. */
+     *  an accepted item instantly applies the upgrade and the slot reports empty again. */
     private static class InstantConsumeContainer implements Container {
-        private final Item requiredItem;
-        private final Runnable onUpgrade;
+        private final java.util.function.Predicate<ItemStack> accepts;
+        private final java.util.function.Consumer<ItemStack> onUpgrade;
 
-        InstantConsumeContainer(Item requiredItem, Runnable onUpgrade) {
-            this.requiredItem = requiredItem;
+        InstantConsumeContainer(java.util.function.Predicate<ItemStack> accepts,
+                                 java.util.function.Consumer<ItemStack> onUpgrade) {
+            this.accepts = accepts;
             this.onUpgrade = onUpgrade;
         }
 
@@ -175,8 +193,8 @@ public abstract class AbstractMachineMenu extends AbstractContainerMenu {
 
         @Override
         public void setItem(int slot, ItemStack stack) {
-            if (!stack.isEmpty() && stack.is(requiredItem)) {
-                onUpgrade.run();
+            if (!stack.isEmpty() && accepts.test(stack)) {
+                onUpgrade.accept(stack);
             }
         }
 

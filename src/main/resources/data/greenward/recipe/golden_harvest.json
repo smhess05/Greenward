@@ -2,12 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "BPB",
-    "P P",
+    "PSP",
     "BPB"
   ],
   "key": {
     "B": "greenward:wheat_bale",
-    "P": "greenward:potato_crate"
+    "P": "greenward:potato_crate",
+    "S": "greenward:sheaf_token"
   },
   "result": {
     "id": "greenward:golden_harvest",

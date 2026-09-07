@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "BBB",
     "B B",
-    "  S"
+    "BSB",
+    "BBB"
   ],
   "key": {
     "B": "greenward:bone_bundle",

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_knucklebone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:knucklebone"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_knucklebone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:knucklebone_sigil"
+    ]
+  }
+}

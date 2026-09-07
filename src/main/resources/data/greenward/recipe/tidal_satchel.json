@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LSL",
+    "SCS",
+    "LSL"
+  ],
+  "key": {
+    "L": "minecraft:leather",
+    "S": "minecraft:string",
+    "C": "greenward:cod_shoal"
+  },
+  "result": {
+    "id": "greenward:tidal_satchel",
+    "count": 1
+  }
+}

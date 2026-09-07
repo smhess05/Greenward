@@ -6,6 +6,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 
+import java.util.List;
+import java.util.Map;
+
 public final class ModArmor {
     private ModArmor() {}
 
@@ -73,88 +76,137 @@ public final class ModArmor {
     public static Item REAPERS_AEGIS_LEGGINGS;
     public static Item REAPERS_AEGIS_BOOTS;
 
+    /** Every Farming/Mining armor piece's own share of that tier's Fortune total — split
+     *  per-piece (helm/chest/legs/boots) exactly like Defense already is, so the number
+     *  shows up on each individual item's tooltip via {@link EquipmentStatContributor}
+     *  instead of only applying (invisibly) when a full set is worn. Totals per tier:
+     *  12 (Tier I) / 25 (Tier II) / 60 (Tier III) — Tier I/III split flat 4 ways, Tier II
+     *  gives the chestplate the odd point out, matching Defense's own biggest-share-to-
+     *  chest convention. */
+    private static final int[] FORTUNE_TIER_I = {3, 3, 3, 3};   // helm, chest, legs, boots
+    private static final int[] FORTUNE_TIER_II = {6, 7, 6, 6};
+    private static final int[] FORTUNE_TIER_III = {15, 15, 15, 15};
+
     public static void initialize() {
         if (GreenwardConfig.ENABLE_GEAR_SETS) {
-            HARVESTERS_HAT = piece("harvesters_hat", ModArmorMaterials.HARVESTERS_GARB, ArmorType.HELMET);
-            HARVESTERS_TUNIC = piece("harvesters_tunic", ModArmorMaterials.HARVESTERS_GARB, ArmorType.CHESTPLATE);
-            HARVESTERS_LEGGINGS = piece("harvesters_leggings", ModArmorMaterials.HARVESTERS_GARB, ArmorType.LEGGINGS);
-            HARVESTERS_BOOTS = piece("harvesters_boots", ModArmorMaterials.HARVESTERS_GARB, ArmorType.BOOTS);
+            HARVESTERS_HAT = piece("harvesters_hat", ModArmorMaterials.HARVESTERS_GARB, ArmorType.HELMET, 15, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_I[0]));
+            HARVESTERS_TUNIC = piece("harvesters_tunic", ModArmorMaterials.HARVESTERS_GARB, ArmorType.CHESTPLATE, 40, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_I[1]));
+            HARVESTERS_LEGGINGS = piece("harvesters_leggings", ModArmorMaterials.HARVESTERS_GARB, ArmorType.LEGGINGS, 30, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_I[2]));
+            HARVESTERS_BOOTS = piece("harvesters_boots", ModArmorMaterials.HARVESTERS_GARB, ArmorType.BOOTS, 15, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_I[3]));
 
-            PROSPECTORS_HELM = piece("prospectors_helm", ModArmorMaterials.PROSPECTORS_PLATE, ArmorType.HELMET);
-            PROSPECTORS_PLATE = piece("prospectors_plate", ModArmorMaterials.PROSPECTORS_PLATE, ArmorType.CHESTPLATE);
-            PROSPECTORS_GREAVES = piece("prospectors_greaves", ModArmorMaterials.PROSPECTORS_PLATE, ArmorType.LEGGINGS);
-            PROSPECTORS_TREADS = piece("prospectors_treads", ModArmorMaterials.PROSPECTORS_PLATE, ArmorType.BOOTS);
+            PROSPECTORS_HELM = piece("prospectors_helm", ModArmorMaterials.PROSPECTORS_PLATE, ArmorType.HELMET, 25, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_I[0]));
+            PROSPECTORS_PLATE = piece("prospectors_plate", ModArmorMaterials.PROSPECTORS_PLATE, ArmorType.CHESTPLATE, 50, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_I[1]));
+            PROSPECTORS_GREAVES = piece("prospectors_greaves", ModArmorMaterials.PROSPECTORS_PLATE, ArmorType.LEGGINGS, 40, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_I[2]));
+            PROSPECTORS_TREADS = piece("prospectors_treads", ModArmorMaterials.PROSPECTORS_PLATE, ArmorType.BOOTS, 25, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_I[3]));
 
-            ANGLERS_CAP = piece("anglers_cap", ModArmorMaterials.ANGLERS_WEAR, ArmorType.HELMET);
-            ANGLERS_COAT = piece("anglers_coat", ModArmorMaterials.ANGLERS_WEAR, ArmorType.CHESTPLATE);
-            ANGLERS_WADERS = piece("anglers_waders", ModArmorMaterials.ANGLERS_WEAR, ArmorType.LEGGINGS);
-            ANGLERS_FINS = piece("anglers_fins", ModArmorMaterials.ANGLERS_WEAR, ArmorType.BOOTS);
+            ANGLERS_CAP = piece("anglers_cap", ModArmorMaterials.ANGLERS_WEAR, ArmorType.HELMET, 15, GreenwardRarity.UNCOMMON);
+            ANGLERS_COAT = piece("anglers_coat", ModArmorMaterials.ANGLERS_WEAR, ArmorType.CHESTPLATE, 40, GreenwardRarity.UNCOMMON);
+            ANGLERS_WADERS = piece("anglers_waders", ModArmorMaterials.ANGLERS_WEAR, ArmorType.LEGGINGS, 30, GreenwardRarity.UNCOMMON);
+            ANGLERS_FINS = piece("anglers_fins", ModArmorMaterials.ANGLERS_WEAR, ArmorType.BOOTS, 15, GreenwardRarity.UNCOMMON);
         }
 
         if (GreenwardConfig.ENABLE_FARMING_PROGRESSION) {
-            CULTIVATORS_HAT = piece("cultivators_hat", ModArmorMaterials.CULTIVATORS_GARB, ArmorType.HELMET);
-            CULTIVATORS_TUNIC = piece("cultivators_tunic", ModArmorMaterials.CULTIVATORS_GARB, ArmorType.CHESTPLATE);
-            CULTIVATORS_LEGGINGS = piece("cultivators_leggings", ModArmorMaterials.CULTIVATORS_GARB, ArmorType.LEGGINGS);
-            CULTIVATORS_BOOTS = piece("cultivators_boots", ModArmorMaterials.CULTIVATORS_GARB, ArmorType.BOOTS);
+            CULTIVATORS_HAT = piece("cultivators_hat", ModArmorMaterials.CULTIVATORS_GARB, ArmorType.HELMET, 35, GreenwardRarity.RARE, 2, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_II[0]));
+            CULTIVATORS_TUNIC = piece("cultivators_tunic", ModArmorMaterials.CULTIVATORS_GARB, ArmorType.CHESTPLATE, 90, GreenwardRarity.RARE, 2, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_II[1]));
+            CULTIVATORS_LEGGINGS = piece("cultivators_leggings", ModArmorMaterials.CULTIVATORS_GARB, ArmorType.LEGGINGS, 65, GreenwardRarity.RARE, 2, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_II[2]));
+            CULTIVATORS_BOOTS = piece("cultivators_boots", ModArmorMaterials.CULTIVATORS_GARB, ArmorType.BOOTS, 35, GreenwardRarity.RARE, 2, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_II[3]));
 
             // Not registered through a crafting recipe — obtained via smithing_transform
             // (Cultivator's piece + Ascension Template + Harvest Core), see ModRecipes-
             // equivalent JSON files under data/greenward/recipe/. Still needs normal item
             // registration like any other piece.
-            WARDENS_HAT = piece("wardens_hat", ModArmorMaterials.WARDENS_GARB, ArmorType.HELMET);
-            WARDENS_TUNIC = piece("wardens_tunic", ModArmorMaterials.WARDENS_GARB, ArmorType.CHESTPLATE);
-            WARDENS_LEGGINGS = piece("wardens_leggings", ModArmorMaterials.WARDENS_GARB, ArmorType.LEGGINGS);
-            WARDENS_BOOTS = piece("wardens_boots", ModArmorMaterials.WARDENS_GARB, ArmorType.BOOTS);
+            WARDENS_HAT = piece("wardens_hat", ModArmorMaterials.WARDENS_GARB, ArmorType.HELMET, 60, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_III[0]));
+            WARDENS_TUNIC = piece("wardens_tunic", ModArmorMaterials.WARDENS_GARB, ArmorType.CHESTPLATE, 130, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_III[1]));
+            WARDENS_LEGGINGS = piece("wardens_leggings", ModArmorMaterials.WARDENS_GARB, ArmorType.LEGGINGS, 100, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_III[2]));
+            WARDENS_BOOTS = piece("wardens_boots", ModArmorMaterials.WARDENS_GARB, ArmorType.BOOTS, 60, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.FARMING_FORTUNE, FORTUNE_TIER_III[3]));
         }
 
         if (GreenwardConfig.ENABLE_MINING_PROGRESSION) {
-            EXCAVATORS_HELM = piece("excavators_helm", ModArmorMaterials.EXCAVATORS_PLATE, ArmorType.HELMET);
-            EXCAVATORS_PLATE = piece("excavators_plate", ModArmorMaterials.EXCAVATORS_PLATE, ArmorType.CHESTPLATE);
-            EXCAVATORS_GREAVES = piece("excavators_greaves", ModArmorMaterials.EXCAVATORS_PLATE, ArmorType.LEGGINGS);
-            EXCAVATORS_TREADS = piece("excavators_treads", ModArmorMaterials.EXCAVATORS_PLATE, ArmorType.BOOTS);
+            EXCAVATORS_HELM = piece("excavators_helm", ModArmorMaterials.EXCAVATORS_PLATE, ArmorType.HELMET, 35, GreenwardRarity.RARE, 2, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_II[0]));
+            EXCAVATORS_PLATE = piece("excavators_plate", ModArmorMaterials.EXCAVATORS_PLATE, ArmorType.CHESTPLATE, 90, GreenwardRarity.RARE, 2, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_II[1]));
+            EXCAVATORS_GREAVES = piece("excavators_greaves", ModArmorMaterials.EXCAVATORS_PLATE, ArmorType.LEGGINGS, 65, GreenwardRarity.RARE, 2, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_II[2]));
+            EXCAVATORS_TREADS = piece("excavators_treads", ModArmorMaterials.EXCAVATORS_PLATE, ArmorType.BOOTS, 35, GreenwardRarity.RARE, 2, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_II[3]));
 
             // Obtained via smithing_transform (Excavator's piece + Ascension Template + Bedrock Core).
-            BEDROCK_HELM = piece("bedrock_helm", ModArmorMaterials.BEDROCK_PLATE, ArmorType.HELMET);
-            BEDROCK_PLATE = piece("bedrock_plate", ModArmorMaterials.BEDROCK_PLATE, ArmorType.CHESTPLATE);
-            BEDROCK_GREAVES = piece("bedrock_greaves", ModArmorMaterials.BEDROCK_PLATE, ArmorType.LEGGINGS);
-            BEDROCK_TREADS = piece("bedrock_treads", ModArmorMaterials.BEDROCK_PLATE, ArmorType.BOOTS);
+            BEDROCK_HELM = piece("bedrock_helm", ModArmorMaterials.BEDROCK_PLATE, ArmorType.HELMET, 60, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_III[0]));
+            BEDROCK_PLATE = piece("bedrock_plate", ModArmorMaterials.BEDROCK_PLATE, ArmorType.CHESTPLATE, 130, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_III[1]));
+            BEDROCK_GREAVES = piece("bedrock_greaves", ModArmorMaterials.BEDROCK_PLATE, ArmorType.LEGGINGS, 100, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_III[2]));
+            BEDROCK_TREADS = piece("bedrock_treads", ModArmorMaterials.BEDROCK_PLATE, ArmorType.BOOTS, 60, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_III[3]));
         }
 
         if (GreenwardConfig.ENABLE_FISHING_PROGRESSION) {
-            TIDAL_CAP = piece("tidal_cap", ModArmorMaterials.TIDAL_WEAR, ArmorType.HELMET);
-            TIDAL_COAT = piece("tidal_coat", ModArmorMaterials.TIDAL_WEAR, ArmorType.CHESTPLATE);
-            TIDAL_WADERS = piece("tidal_waders", ModArmorMaterials.TIDAL_WEAR, ArmorType.LEGGINGS);
-            TIDAL_FINS = piece("tidal_fins", ModArmorMaterials.TIDAL_WEAR, ArmorType.BOOTS);
+            TIDAL_CAP = piece("tidal_cap", ModArmorMaterials.TIDAL_WEAR, ArmorType.HELMET, 35, GreenwardRarity.RARE, 2);
+            TIDAL_COAT = piece("tidal_coat", ModArmorMaterials.TIDAL_WEAR, ArmorType.CHESTPLATE, 90, GreenwardRarity.RARE, 2);
+            TIDAL_WADERS = piece("tidal_waders", ModArmorMaterials.TIDAL_WEAR, ArmorType.LEGGINGS, 65, GreenwardRarity.RARE, 2);
+            TIDAL_FINS = piece("tidal_fins", ModArmorMaterials.TIDAL_WEAR, ArmorType.BOOTS, 35, GreenwardRarity.RARE, 2);
 
             // Obtained via smithing_transform (Tidal piece + Ascension Template + Leviathan's Heart).
-            LEVIATHANS_CAP = piece("leviathans_cap", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.HELMET);
-            LEVIATHANS_COAT = piece("leviathans_coat", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.CHESTPLATE);
-            LEVIATHANS_WADERS = piece("leviathans_waders", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.LEGGINGS);
-            LEVIATHANS_FINS = piece("leviathans_fins", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.BOOTS);
+            LEVIATHANS_CAP = piece("leviathans_cap", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.HELMET, 60, GreenwardRarity.EPIC, 3);
+            LEVIATHANS_COAT = piece("leviathans_coat", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.CHESTPLATE, 130, GreenwardRarity.EPIC, 3);
+            LEVIATHANS_WADERS = piece("leviathans_waders", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.LEGGINGS, 100, GreenwardRarity.EPIC, 3);
+            LEVIATHANS_FINS = piece("leviathans_fins", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.BOOTS, 60, GreenwardRarity.EPIC, 3);
         }
 
         if (GreenwardConfig.ENABLE_COMBAT_PROGRESSION) {
-            MARROWGUARD_HELMET = piece("marrowguard_helmet", ModArmorMaterials.MARROWGUARD, ArmorType.HELMET);
-            MARROWGUARD_CHESTPLATE = piece("marrowguard_chestplate", ModArmorMaterials.MARROWGUARD, ArmorType.CHESTPLATE);
-            MARROWGUARD_LEGGINGS = piece("marrowguard_leggings", ModArmorMaterials.MARROWGUARD, ArmorType.LEGGINGS);
-            MARROWGUARD_BOOTS = piece("marrowguard_boots", ModArmorMaterials.MARROWGUARD, ArmorType.BOOTS);
+            MARROWGUARD_HELMET = piece("marrowguard_helmet", ModArmorMaterials.MARROWGUARD, ArmorType.HELMET, 15, GreenwardRarity.UNCOMMON);
+            MARROWGUARD_CHESTPLATE = piece("marrowguard_chestplate", ModArmorMaterials.MARROWGUARD, ArmorType.CHESTPLATE, 50, GreenwardRarity.UNCOMMON);
+            MARROWGUARD_LEGGINGS = piece("marrowguard_leggings", ModArmorMaterials.MARROWGUARD, ArmorType.LEGGINGS, 40, GreenwardRarity.UNCOMMON);
+            MARROWGUARD_BOOTS = piece("marrowguard_boots", ModArmorMaterials.MARROWGUARD, ArmorType.BOOTS, 15, GreenwardRarity.UNCOMMON);
 
-            ASHWROUGHT_HELMET = piece("ashwrought_helmet", ModArmorMaterials.ASHWROUGHT, ArmorType.HELMET);
-            ASHWROUGHT_CHESTPLATE = piece("ashwrought_chestplate", ModArmorMaterials.ASHWROUGHT, ArmorType.CHESTPLATE);
-            ASHWROUGHT_LEGGINGS = piece("ashwrought_leggings", ModArmorMaterials.ASHWROUGHT, ArmorType.LEGGINGS);
-            ASHWROUGHT_BOOTS = piece("ashwrought_boots", ModArmorMaterials.ASHWROUGHT, ArmorType.BOOTS);
+            ASHWROUGHT_HELMET = piece("ashwrought_helmet", ModArmorMaterials.ASHWROUGHT, ArmorType.HELMET, 35, GreenwardRarity.RARE, 2);
+            ASHWROUGHT_CHESTPLATE = piece("ashwrought_chestplate", ModArmorMaterials.ASHWROUGHT, ArmorType.CHESTPLATE, 90, GreenwardRarity.RARE, 2);
+            ASHWROUGHT_LEGGINGS = piece("ashwrought_leggings", ModArmorMaterials.ASHWROUGHT, ArmorType.LEGGINGS, 65, GreenwardRarity.RARE, 2);
+            ASHWROUGHT_BOOTS = piece("ashwrought_boots", ModArmorMaterials.ASHWROUGHT, ArmorType.BOOTS, 35, GreenwardRarity.RARE, 2);
 
             // Obtained via smithing_transform (Ashwrought piece + Ascension Template + Reaper's Core).
-            REAPERS_AEGIS_HELMET = piece("reapers_aegis_helmet", ModArmorMaterials.REAPERS_AEGIS, ArmorType.HELMET);
-            REAPERS_AEGIS_CHESTPLATE = piece("reapers_aegis_chestplate", ModArmorMaterials.REAPERS_AEGIS, ArmorType.CHESTPLATE);
-            REAPERS_AEGIS_LEGGINGS = piece("reapers_aegis_leggings", ModArmorMaterials.REAPERS_AEGIS, ArmorType.LEGGINGS);
-            REAPERS_AEGIS_BOOTS = piece("reapers_aegis_boots", ModArmorMaterials.REAPERS_AEGIS, ArmorType.BOOTS);
+            REAPERS_AEGIS_HELMET = piece("reapers_aegis_helmet", ModArmorMaterials.REAPERS_AEGIS, ArmorType.HELMET, 60, GreenwardRarity.EPIC, 3);
+            REAPERS_AEGIS_CHESTPLATE = piece("reapers_aegis_chestplate", ModArmorMaterials.REAPERS_AEGIS, ArmorType.CHESTPLATE, 130, GreenwardRarity.EPIC, 3);
+            REAPERS_AEGIS_LEGGINGS = piece("reapers_aegis_leggings", ModArmorMaterials.REAPERS_AEGIS, ArmorType.LEGGINGS, 100, GreenwardRarity.EPIC, 3);
+            REAPERS_AEGIS_BOOTS = piece("reapers_aegis_boots", ModArmorMaterials.REAPERS_AEGIS, ArmorType.BOOTS, 60, GreenwardRarity.EPIC, 3);
         }
     }
 
-    private static Item piece(String name, ArmorMaterial material, ArmorType type) {
-        return ModItems.register(name, properties -> new Item(properties),
-                new Item.Properties().humanoidArmor(material, type));
+    private static Map<GreenwardStat, Double> fortune(GreenwardStat stat, int amount) {
+        return Map.of(stat, (double) amount);
+    }
+
+    /**
+     * @param defense the piece's share of its set's total Defense stat (Update 1 § 1.4) —
+     *                see {@link ModArmorMaterials} for how each set's total was split.
+     *                Every value across every set is a multiple of 5, per the user's
+     *                explicit request during playtesting.
+     */
+    private static Item piece(String name, ArmorMaterial material, ArmorType type, int defense, GreenwardRarity rarity) {
+        return piece(name, material, type, defense, rarity, 0, Map.of());
+    }
+
+    private static Item piece(String name, ArmorMaterial material, ArmorType type, int defense, GreenwardRarity rarity, Map<GreenwardStat, Double> extraStats) {
+        return piece(name, material, type, defense, rarity, 0, extraStats);
+    }
+
+    /** @param maxSockets Design Program Update 5 § 5.2 — Tier II gear gets 2, Tier III
+     *                    gets 3 (a flat rule off the spec's "1-3" range); Tier I gets 0
+     *                    via the 5-arg overload above. */
+    private static Item piece(String name, ArmorMaterial material, ArmorType type, int defense, GreenwardRarity rarity, int maxSockets) {
+        return piece(name, material, type, defense, rarity, maxSockets, Map.of());
+    }
+
+    /** @param extraStats Farming/Mining Fortune's own per-piece share (see
+     *                    {@link #FORTUNE_TIER_I}/II/III) — empty for pillars with no
+     *                    armor-side Fortune grant (Fishing/Combat). Merged with Defense
+     *                    into one {@link GreenwardComponents#STATS} map so both show on
+     *                    the item's own tooltip via {@link EquipmentStatContributor}. */
+    private static Item piece(String name, ArmorMaterial material, ArmorType type, int defense, GreenwardRarity rarity, int maxSockets, Map<GreenwardStat, Double> extraStats) {
+        Map<GreenwardStat, Double> stats = new java.util.HashMap<>(extraStats);
+        stats.put(GreenwardStat.DEFENSE, (double) defense);
+        Item.Properties properties = new Item.Properties()
+                .humanoidArmor(material, type)
+                .component(GreenwardComponents.STATS, stats)
+                .component(GreenwardComponents.RARITY, rarity);
+        if (maxSockets > 0) {
+            properties = properties.component(GreenwardComponents.SOCKETS, new SocketData(maxSockets, List.of()));
+        }
+        return ModItems.register(name, props -> new Item(props), properties);
     }
 
     private static boolean hasFullSet(LivingEntity entity, Item hat, Item tunic, Item leggings, Item boots) {

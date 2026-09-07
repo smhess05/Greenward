@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "cobblestone_tier_5": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "cobblestone",
+        "tier": 5
+      }
+    }
+  },
+  "requirements": [["cobblestone_tier_5"]],
+  "rewards": { "recipes": ["greenward:press"] }
+}

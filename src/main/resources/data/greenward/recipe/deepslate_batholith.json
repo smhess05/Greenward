@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:deepslate_massif",
+    "greenward:deepslate_massif",
+    "greenward:deepslate_massif",
+    "greenward:deepslate_massif",
+    "greenward:deepslate_massif",
+    "greenward:deepslate_massif",
+    "greenward:deepslate_massif",
+    "greenward:deepslate_massif",
+    "greenward:deepslate_massif"
+  ],
+  "result": {
+    "id": "greenward:deepslate_batholith",
+    "count": 1
+  }
+}

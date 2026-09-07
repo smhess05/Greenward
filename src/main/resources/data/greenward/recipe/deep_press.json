@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DID",
+    "IPI",
+    "DID"
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "I": "minecraft:iron_ingot",
+    "P": "greenward:press"
+  },
+  "result": { "id": "greenward:deep_press", "count": 1 }
+}

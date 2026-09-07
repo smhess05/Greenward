@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:iron_ingot",
+    "minecraft:flint",
+    "minecraft:flint"
+  ],
+  "result": {
+    "id": "greenward:keen_stone",
+    "count": 1
+  }
+}

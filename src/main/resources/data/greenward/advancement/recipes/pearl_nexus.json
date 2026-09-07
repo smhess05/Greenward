@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_pearl_cluster": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:pearl_cluster"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_pearl_cluster"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:pearl_nexus"
+    ]
+  }
+}

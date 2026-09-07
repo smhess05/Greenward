@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:string",
+    "minecraft:string",
+    "minecraft:string",
+    "minecraft:spider_eye",
+    "greenward:seal"
+  ],
+  "result": {
+    "id": "greenward:slayer_horn_spider",
+    "count": 1
+  }
+}

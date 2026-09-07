@@ -1,20 +1,25 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_bone_reliquary": {
-      "trigger": "minecraft:inventory_changed",
+    "bone_tier_7": {
+      "trigger": "greenward:tier_reached",
       "conditions": {
-        "items": [
-          {
-            "items": "greenward:bone_reliquary"
-          }
-        ]
+        "collection": "bone",
+        "tier": 7
+      }
+    },
+    "gunpowder_tier_5": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "gunpowder",
+        "tier": 5
       }
     }
   },
   "requirements": [
     [
-      "has_bone_reliquary"
+      "bone_tier_7",
+      "gunpowder_tier_5"
     ]
   ],
   "rewards": {

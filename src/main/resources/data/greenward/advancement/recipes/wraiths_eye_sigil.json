@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_wraiths_eye": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:wraiths_eye"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_wraiths_eye"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:wraiths_eye_sigil"
+    ]
+  }
+}

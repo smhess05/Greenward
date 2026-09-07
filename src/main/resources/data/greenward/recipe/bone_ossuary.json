@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:bone_charnel",
+    "greenward:bone_charnel",
+    "greenward:bone_charnel",
+    "greenward:bone_charnel",
+    "greenward:bone_charnel",
+    "greenward:bone_charnel",
+    "greenward:bone_charnel",
+    "greenward:bone_charnel",
+    "greenward:bone_charnel"
+  ],
+  "result": {
+    "id": "greenward:bone_ossuary",
+    "count": 1
+  }
+}

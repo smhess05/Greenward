@@ -3,7 +3,8 @@
   "ingredients": [
     "greenward:bone_reliquary",
     "greenward:powder_cache",
-    "minecraft:ender_pearl"
+    "minecraft:ender_pearl",
+    "greenward:boss_essence"
   ],
   "result": {
     "id": "greenward:reapers_core",

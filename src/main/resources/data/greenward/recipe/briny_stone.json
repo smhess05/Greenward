@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:iron_ingot",
+    "minecraft:prismarine_shard",
+    "minecraft:prismarine_shard"
+  ],
+  "result": {
+    "id": "greenward:briny_stone",
+    "count": 1
+  }
+}

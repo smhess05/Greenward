@@ -1,20 +1,33 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_potato_crate": {
-      "trigger": "minecraft:inventory_changed",
+    "wheat_tier_9": {
+      "trigger": "greenward:tier_reached",
       "conditions": {
-        "items": [
-          {
-            "items": "greenward:potato_crate"
-          }
-        ]
+        "collection": "wheat",
+        "tier": 9
+      }
+    },
+    "potato_tier_8": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "potato",
+        "tier": 8
+      }
+    },
+    "carrot_tier_7": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "carrot",
+        "tier": 7
       }
     }
   },
   "requirements": [
     [
-      "has_potato_crate"
+      "wheat_tier_9",
+      "potato_tier_8",
+      "carrot_tier_7"
     ]
   ],
   "rewards": {

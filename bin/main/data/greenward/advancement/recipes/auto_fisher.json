@@ -1,11 +1,22 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_fishing_rod": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": { "items": [{ "items": "minecraft:fishing_rod" }] }
+    "cod_tier_5": {
+      "trigger": "greenward:tier_reached",
+      "conditions": {
+        "collection": "cod",
+        "tier": 5
+      }
     }
   },
-  "requirements": [["has_fishing_rod"]],
-  "rewards": { "recipes": ["greenward:auto_fisher"] }
+  "requirements": [
+    [
+      "cod_tier_5"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:auto_fisher"
+    ]
+  }
 }

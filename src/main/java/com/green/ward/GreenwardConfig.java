@@ -53,6 +53,43 @@ public final class GreenwardConfig {
     /** Auto-Miner-only: ore regrowth-delay upgrade tiers: 0 (base) .. MAX_REGEN_TIER. */
     public static final int MAX_REGEN_TIER = 4;
 
+    /** Design Program Update 4 § 4.3 — the five Effigies (combat automation). */
+    public static final boolean ENABLE_EFFIGIES = true;
+
+    /** Design Program Update 5 — Mining Depth: rare drops from vanilla ore, gem cutting
+     *  and sockets, the retired mining-speed ladder. */
+    public static final boolean ENABLE_MINING_DEPTH = true;
+
+    /** Design Program Update 6 — The Heartwood: one placed block holding four perk
+     *  branches and talisman sockets. */
+    public static final boolean ENABLE_HEARTWOOD = true;
+
+    /** Design Program Update 7 — Threat: world difficulty scaling with vanilla mobs. */
+    public static final boolean ENABLE_THREAT = true;
+
+    /** § 7.2 — damage scales more slowly than health/speed by design, but can be
+     *  switched off entirely (health/speed scaling stay on) if it proves too punishing
+     *  for a player mid-progression, per the spec's own explicit config knob. */
+    public static final boolean THREAT_DAMAGE_SCALING = true;
+
+    /** Design Program Update 8 — Villagers & Seals: commissions, Prosperity, Tempering. */
+    public static final boolean ENABLE_VILLAGERS_SEALS = true;
+
+    /** Design Program Update 9 — Farming & Fishing Depth: Harvest Fairs, Blight, Twin
+     *  Bite, the Catch Log. */
+    public static final boolean ENABLE_FARMING_FISHING_DEPTH = true;
+
+    /** Design Program Update 10 — Endgame: rescaled vanilla bosses, the God Potion
+     *  rework's non-automatable ingredients. */
+    public static final boolean ENABLE_ENDGAME = true;
+
+    /** Design Program Update 4 § 4.1③ — per-world placement cap on the automation
+     *  blocks, enforced by {@link MachinePlacementGuard}, counting every automation
+     *  block across every dimension in this save. The spec's per-chunk cap was removed
+     *  at the user's explicit request ("I want the peak of automation to be very
+     *  powerful") — dense single-chunk automation farms are intentionally allowed. */
+    public static final int MAX_MACHINES_PER_WORLD = 24;
+
     /** Harvester / Prospector / Angler armor sets and their set bonuses. */
     public static final boolean ENABLE_GEAR_SETS = true;
 
@@ -95,4 +132,39 @@ public final class GreenwardConfig {
      * elite variants of the five classic hostiles).
      */
     public static final boolean ENABLE_COMBAT_PROGRESSION = true;
+
+    /**
+     * Design Program Update 2: Collections (9 tracked materials, Tiers I–X), Skills
+     * (Farming/Mining/Combat/Fishing, levels 0–50), and Proofs (the manual gate from
+     * Tier IV up — quantity alone is never enough). Also gates the § 2.4 recipe retrofit
+     * that re-keys existing recipe advancements to collection-tier completion instead of
+     * simple item pickup.
+     */
+    public static final boolean ENABLE_COLLECTIONS_PROOFS = true;
+
+    /** Post-Design-Program addition: fuses a vanilla Elytra into any chestplate at the
+     *  smithing table via {@link ElytraFusionRecipe}, so armor and glide stop competing
+     *  for the chest slot. User-requested, not part of the original 10-update program. */
+    public static final boolean ENABLE_ELYTRA_FUSION = true;
+
+    /** Post-Design-Program addition: the Voidstep Blade, a short-range combat teleport
+     *  gated behind a large Ender Pearl cost (Hypixel SkyBlock's "Aspect of the End"). */
+    public static final boolean ENABLE_VOIDSTEP = true;
+
+    /** Post-Design-Program addition: lava fishing, a parallel late-game fishing track
+     *  whose top tier is calibrated to slightly exceed the Leviathan Rod (the best
+     *  water-fishing tier from Update 9). */
+    public static final boolean ENABLE_LAVA_FISHING = true;
+
+    /** Post-Design-Program addition: the Coin economy — a virtual per-player balance,
+     *  a universal sell mechanic (Coin Purse), and three sinks (Waystone fast travel,
+     *  villager instant-repair, villager Wares). User-requested, explicitly scoped to
+     *  never touch vanilla villager trades — see VillagerShopHandler/VillagerShopMenu. */
+    public static final boolean ENABLE_ECONOMY = true;
+
+    /** Post-Design-Program addition: Slayers — summon-a-boss quests reusing The Marked's
+     *  own five vanilla mob types, the deliberate "break from the grind" moment SkyBlock
+     *  has and Greenward didn't (The Marked itself is a passive random bonus, not a goal
+     *  a player chooses to chase). */
+    public static final boolean ENABLE_SLAYERS = true;
 }

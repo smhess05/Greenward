@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:powder_magazine",
+    "greenward:powder_magazine",
+    "greenward:powder_magazine",
+    "greenward:powder_magazine",
+    "greenward:powder_magazine",
+    "greenward:powder_magazine",
+    "greenward:powder_magazine",
+    "greenward:powder_magazine",
+    "greenward:powder_magazine"
+  ],
+  "result": {
+    "id": "greenward:powder_arsenal",
+    "count": 1
+  }
+}

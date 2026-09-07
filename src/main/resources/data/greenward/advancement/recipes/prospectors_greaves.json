@@ -1,20 +1,17 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_diamond": {
-      "trigger": "minecraft:inventory_changed",
+    "cobblestone_tier_4": {
+      "trigger": "greenward:tier_reached",
       "conditions": {
-        "items": [
-          {
-            "items": "minecraft:diamond"
-          }
-        ]
+        "collection": "cobblestone",
+        "tier": 4
       }
     }
   },
   "requirements": [
     [
-      "has_diamond"
+      "cobblestone_tier_4"
     ]
   ],
   "rewards": {
