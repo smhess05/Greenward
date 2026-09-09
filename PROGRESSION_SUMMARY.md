@@ -972,6 +972,17 @@ and stops them from spawning entirely on Peaceful, which independently explains 
 hostile mob drops" with nothing to do with any Greenward code. Flagged back to the user
 to switch difficulty and confirm before assuming a real bug remains.
 
+**Universal tool stat display** (`GreenwardTooltipRenderer`, user-requested — "every
+tool, including vanilla, has damage/mining speed/fortune numbers"): a new item-agnostic
+block reads any item's real `Tool`/`ItemAttributeModifiers` components directly — these
+exist on every pickaxe/axe/shovel/hoe/sword in the game, vanilla included, not just
+Greenward's own — and renders "❁ Damage: +X" / "⫕ Mining Speed: X" in gray, above the
+existing green/red Greenward-bonus stat lines. A plain vanilla Diamond Pickaxe now shows
+"Mining Speed: 8" the same way a Prospector's Drill shows its own, so the two are directly
+comparable. Fortune stays Greenward-STATS-only (shown only when actually granted) —
+vanilla has no equivalent mechanic to read, so showing "Mining Fortune: 0" on every
+vanilla tool would be pure clutter rather than real information.
+
 ---
 
 ## 16. Open items / known caveats for review
