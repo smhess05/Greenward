@@ -121,8 +121,9 @@ public final class SeaCreatureHandler {
             return;
         }
 
+        int rodTier = rodTier(player);
+
         if (GreenwardConfig.ENABLE_SEA_CREATURES) {
-            int rodTier = rodTier(player);
             float chance = computeChance(player, rodTier);
             if (level.getRandom().nextFloat() < chance) {
                 Creature creature = rollCreature(level.getRandom(), rodTier);
@@ -139,8 +140,46 @@ public final class SeaCreatureHandler {
             }
         }
 
+        rollBonusFishingMaterials(level, rodTier, drops);
+
         if (GreenwardConfig.ENABLE_COLLECTIONS_PROOFS) {
             trackFishingCollection(serverPlayer, level, drops);
+        }
+    }
+
+    /** Bootstraps the Fishing pillar's own material chain (user-requested — "base fishing
+     *  rod needs to be able to fish up prismarine shards and pieces to craft the better
+     *  rods"): even a plain vanilla rod (tier 0) can now fish up Prismarine Shard, so
+     *  getting into Angler's Line at all never requires a Guardian kill first. Each rod
+     *  tier then unlocks a chance at the NEXT tier's own ingredient once you're already
+     *  holding it — Angler's Line (1) adds Prismarine Crystals, Deep-Sea Rod (2) adds
+     *  Nautilus Shell — so climbing the rod ladder is self-sufficient end to end, ordered
+     *  to match crafting progression. Purely additive, never replaces the normal catch. */
+    private static void rollBonusFishingMaterials(ServerLevel level, int rodTier, List<ItemStack> drops) {
+        RandomSource random = level.getRandom();
+
+        float shardChance = switch (rodTier) {
+            case 0 -> 0.10F;
+            case 1 -> 0.20F;
+            case 2 -> 0.15F;
+            default -> 0.20F;
+        };
+        if (random.nextFloat() < shardChance) {
+            drops.add(new ItemStack(Items.PRISMARINE_SHARD, rodTier >= 1 ? 1 + random.nextInt(2) : 1));
+        }
+
+        if (rodTier >= 1) {
+            float crystalChance = rodTier == 1 ? 0.08F : rodTier == 2 ? 0.15F : 0.20F;
+            if (random.nextFloat() < crystalChance) {
+                drops.add(new ItemStack(Items.PRISMARINE_CRYSTALS, 1 + random.nextInt(2)));
+            }
+        }
+
+        if (rodTier >= 2) {
+            float shellChance = rodTier == 2 ? 0.06F : 0.10F;
+            if (random.nextFloat() < shellChance) {
+                drops.add(new ItemStack(Items.NAUTILUS_SHELL, 1));
+            }
         }
     }
 

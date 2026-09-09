@@ -926,9 +926,55 @@ the same anti-automation check every kill-triggered system in this mod already u
 Every Horn recipe needs a Seal, tying Slayers into the villager-reputation economy too —
 you can't buy your way into Slayers with Coins alone.
 
+## 15. Fishing bootstrap, tool stats, and a "no mob drops" report
+
+**Prismarine progression** (`SeaCreatureHandler.rollBonusFishingMaterials`, user-
+requested — "base fishing rod needs to be able to fish up prismarine shards... order
+which rods drop them to match progression"): every successful non-sea-creature catch now
+has an *additive* chance at bonus Fishing-pillar materials, gated by held rod tier so the
+ladder is self-sufficient end to end instead of needing a Guardian kill to ever start:
+
+| Rod tier | Prismarine Shard | Prismarine Crystals | Nautilus Shell |
+|---|---|---|---|
+| 0 (any vanilla rod) | 10% × 1 | — | — |
+| 1 (Angler's Line) | 20% × 1-2 | 8% × 1-2 | — |
+| 2 (Deep-Sea Rod) | 15% × 1-2 | 15% × 1-2 | 6% × 1 |
+| 3 (Leviathan Rod) | 20% × 1-2 | 20% × 1-2 | 10% × 1 |
+
+Each tier's own crafting ingredient unlocks at the tier *below* it (Shard needs nothing,
+Crystals need Angler's Line already in hand, Shell needs Deep-Sea Rod) — climbing the rod
+ladder is now possible from a plain vanilla rod alone.
+
+**Tool stats** (user-requested — "tools need to display the stats they give like
+fortune/speed etc"): the tooltip renderer (`GreenwardTooltipRenderer`) already renders
+any item's `STATS` component generically — Prospector's Drill/Excavator's Pick/Bedrock
+Reaver and all three fishing rods already had one and were already showing it. The actual
+gap was that the Scythes and the three Combat-pillar swords carried **no stat at all**,
+so there was nothing to display. Given real grants now:
+
+| Tool | Grant |
+|---|---|
+| Harvester's Scythe | +5 Farming Fortune |
+| Cultivator's Scythe | +12 Farming Fortune |
+| Harvest Warden | +25 Farming Fortune |
+| Marrowguard Blade | +10 Strength |
+| Ashwrought Edge | +20 Strength |
+| Reaper's Edge | +35 Strength, +15 Crit Damage |
+| Voidstep Blade | +15 Strength |
+
+**"Mobs aren't dropping items"**: reviewed every loot/death-related hook in the mod
+(`ThreatMobHandler`, `GreenwardCombatHandler`, `GreenwardDamageHandler`, `SetBonusHandler`'s
+Grim Resolve, `MarkedMobHandler`, `SlayerHandler`) — none of them clear or suppress a
+normal hostile mob's own drops; `ALLOW_DEATH`/loot-scaling hooks are all correctly scoped
+(player-only, sea-creature-only, or additive-only). The user's actual save (`run/saves/
+Test/level.dat`) is set to **Peaceful difficulty** — vanilla removes existing hostile mobs
+and stops them from spawning entirely on Peaceful, which independently explains "no
+hostile mob drops" with nothing to do with any Greenward code. Flagged back to the user
+to switch difficulty and confirm before assuming a real bug remains.
+
 ---
 
-## 15. Open items / known caveats for review
+## 16. Open items / known caveats for review
 
 - **Not independently verified in this environment**: any actual gameplay feel (RCON
   can drive server-side block-entity state, brewing, and item-give commands, but not a

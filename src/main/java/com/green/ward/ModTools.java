@@ -127,7 +127,8 @@ public final class ModTools {
 
         HARVESTERS_SCYTHE = ModItems.register("harvesters_scythe",
                 properties -> new HoeItem(SCYTHE_MATERIAL, -3.0F, 0.0F, properties),
-                new Item.Properties());
+                new Item.Properties().component(GreenwardComponents.STATS, Map.of(
+                        GreenwardStat.FARMING_FORTUNE, 5.0)));
 
         PROSPECTORS_DRILL = ModItems.register("prospectors_drill",
                 properties -> new Item(properties),
@@ -164,13 +165,17 @@ public final class ModTools {
         if (GreenwardConfig.ENABLE_FARMING_PROGRESSION) {
             CULTIVATORS_SCYTHE = ModItems.register("cultivators_scythe",
                     properties -> new HoeItem(CULTIVATORS_SCYTHE_MATERIAL, -3.0F, 0.0F, properties),
-                    new Item.Properties().component(GreenwardComponents.SOCKETS, new SocketData(2, List.of())));
+                    new Item.Properties().component(GreenwardComponents.SOCKETS, new SocketData(2, List.of()))
+                            .component(GreenwardComponents.STATS, Map.of(
+                                    GreenwardStat.FARMING_FORTUNE, 12.0)));
 
             // Not registered through a crafting recipe — obtained via smithing_transform,
             // see data/greenward/recipe/harvest_warden.json.
             HARVEST_WARDEN = ModItems.register("harvest_warden",
                     properties -> new HoeItem(HARVEST_WARDEN_MATERIAL, -3.0F, 0.0F, properties),
-                    new Item.Properties().component(GreenwardComponents.SOCKETS, new SocketData(3, List.of())));
+                    new Item.Properties().component(GreenwardComponents.SOCKETS, new SocketData(3, List.of()))
+                            .component(GreenwardComponents.STATS, Map.of(
+                                    GreenwardStat.FARMING_FORTUNE, 25.0)));
         }
 
         if (GreenwardConfig.ENABLE_MINING_PROGRESSION) {
@@ -196,25 +201,33 @@ public final class ModTools {
         if (GreenwardConfig.ENABLE_COMBAT_PROGRESSION) {
             MARROWGUARD_BLADE = ModItems.register("marrowguard_blade",
                     properties -> new Item(properties),
-                    new Item.Properties().sword(MARROWGUARD_BLADE_MATERIAL, 3.0F, -2.4F));
+                    new Item.Properties().sword(MARROWGUARD_BLADE_MATERIAL, 3.0F, -2.4F)
+                            .component(GreenwardComponents.STATS, Map.of(
+                                    GreenwardStat.STRENGTH, 10.0)));
 
             ASHWROUGHT_EDGE = ModItems.register("ashwrought_edge",
                     properties -> new Item(properties),
                     new Item.Properties().sword(ASHWROUGHT_EDGE_MATERIAL, 3.0F, -2.4F)
-                            .component(GreenwardComponents.SOCKETS, new SocketData(2, List.of())));
+                            .component(GreenwardComponents.SOCKETS, new SocketData(2, List.of()))
+                            .component(GreenwardComponents.STATS, Map.of(
+                                    GreenwardStat.STRENGTH, 20.0)));
 
             // Not registered through a crafting recipe — obtained via smithing_transform,
             // see data/greenward/recipe/reapers_edge.json.
             REAPERS_EDGE = ModItems.register("reapers_edge",
                     properties -> new Item(properties),
                     new Item.Properties().sword(REAPERS_EDGE_MATERIAL, 3.0F, -2.4F)
-                            .component(GreenwardComponents.SOCKETS, new SocketData(3, List.of())));
+                            .component(GreenwardComponents.SOCKETS, new SocketData(3, List.of()))
+                            .component(GreenwardComponents.STATS, Map.of(
+                                    GreenwardStat.STRENGTH, 35.0, GreenwardStat.CRIT_DAMAGE, 15.0)));
         }
 
         if (GreenwardConfig.ENABLE_VOIDSTEP) {
             VOIDSTEP_BLADE = ModItems.register("voidstep_blade",
                     properties -> new Item(properties),
-                    new Item.Properties().sword(VOIDSTEP_BLADE_MATERIAL, 3.0F, -2.4F));
+                    new Item.Properties().sword(VOIDSTEP_BLADE_MATERIAL, 3.0F, -2.4F)
+                            .component(GreenwardComponents.STATS, Map.of(
+                                    GreenwardStat.STRENGTH, 15.0)));
         }
 
         if (GreenwardConfig.ENABLE_LAVA_FISHING) {
