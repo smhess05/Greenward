@@ -1,13 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "SSB",
+    "SSS",
     " R ",
     " R "
   ],
   "key": {
     "S": "greenward:wheat_sheaf",
-    "B": "greenward:wheat_bale",
     "R": "minecraft:stick"
   },
   "result": {

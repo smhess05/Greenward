@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "greenward:item/excavators_pick"
-  }
+  "parent": "minecraft:item/netherite_pickaxe"
 }

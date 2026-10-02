@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_barbed_trident": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "greenward:barbed_trident"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_barbed_trident"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "greenward:tidal_trident"
+    ]
+  }
+}

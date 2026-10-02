@@ -1,13 +1,14 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "CCC",
-    "C C",
-    "   "
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:prospectors_helm",
+    "greenward:cobble_monolith",
+    "greenward:cobble_monolith",
+    "greenward:cobble_monolith",
+    "greenward:cobble_monolith",
+    "greenward:deepslate_cluster",
+    "greenward:deepslate_cluster"
   ],
-  "key": {
-    "C": "greenward:cobble_monolith"
-  },
   "result": {
     "id": "greenward:excavators_helm",
     "count": 1

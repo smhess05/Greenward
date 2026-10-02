@@ -4,7 +4,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,6 +19,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class Greenward implements ModInitializer {
@@ -42,6 +46,7 @@ public class Greenward implements ModInitializer {
         GreenwardRareOreHandler.initialize();
         MiningAbilityHandler.initialize();
         VoidstepAbilityHandler.initialize();
+        TridentAbilityHandler.initialize();
         LavaFishingHandler.initialize();
         ThreatMobHandler.initialize();
         CommissionHandler.initialize();
@@ -111,17 +116,34 @@ public class Greenward implements ModInitializer {
                 BlockPos pos = hitResult.getBlockPos();
                 BlockState clicked = level.getBlockState(pos);
 
+                // User-requested — fertilizing should visibly and permanently swap the
+                // block to real Fertilized Farmland (its own dry/wet textures), not an
+                // invisible data-only record with a chat message standing in for feedback.
+                // The block itself is now the "already fertilized?" check too — no data
+                // lookup needed, the texture already answers that on sight.
+                if (clicked.getBlock() == ModBlocks.FERTILIZED_FARMLAND) {
+                    return InteractionResult.FAIL;
+                }
                 if (clicked.getBlock() != Blocks.FARMLAND) {
                     return InteractionResult.PASS;
                 }
 
-                // Permanence Charter § 1.2 rule 4: fertilization is BlockPos-keyed side-data,
-                // never a distinct block — the farmland underneath stays real vanilla farmland.
-                FertilizedFarmlandData.get((ServerLevel) level).setFertilized(pos);
+                ServerLevel serverLevel = (ServerLevel) level;
+                int moisture = clicked.getValue(FarmlandBlock.MOISTURE);
+                serverLevel.setBlockAndUpdate(pos, ModBlocks.FERTILIZED_FARMLAND.defaultBlockState()
+                        .setValue(FarmlandBlock.MOISTURE, Math.max(moisture, FarmlandBlock.MAX_MOISTURE)));
+                // Kept as a belt-and-suspenders record alongside the block swap above —
+                // HarvestLogic's own fertilized check reads this, unaffected by whether the
+                // visible block ever reverts through some other vanilla-inherited mechanic.
+                FertilizedFarmlandData.get(serverLevel).setFertilized(pos);
 
                 if (!player.isCreative()) {
                     held.shrink(1);
                 }
+
+                serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER,
+                        pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 8, 0.3, 0.2, 0.3, 0.0);
+                serverLevel.playSound(null, pos, SoundEvents.BONE_MEAL_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                 return InteractionResult.SUCCESS;
             });

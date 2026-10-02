@@ -641,6 +641,14 @@ public final class FieldGuideContent {
                 .build());
 
         p.add(new Page()
+                .heading("Fishing's Own Weapon")
+                .blank()
+                .body("Barbed Trident, Tidal Trident, Leviathan's Trident — a trident line paired with the rod tiers. Leviathan's Trident needs a Heart of the Sea, an Abyssal Warden drop.")
+                .blank()
+                .body("Sneak-right-click with Leviathan's Trident for Riptide Slash — a 6-block arc of damage. Plain right-click still charges and throws like any trident.")
+                .build());
+
+        p.add(new Page()
                 .title("Fair Winds")
                 .blank()
                 .body("That's every recipe known to Greenward, from a single sheaf of wheat to the God Potion itself.")

@@ -8,10 +8,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
@@ -152,9 +155,10 @@ public final class SeaCreatureHandler {
      *  rods"): even a plain vanilla rod (tier 0) can now fish up Prismarine Shard, so
      *  getting into Angler's Line at all never requires a Guardian kill first. Each rod
      *  tier then unlocks a chance at the NEXT tier's own ingredient once you're already
-     *  holding it — Angler's Line (1) adds Prismarine Crystals, Deep-Sea Rod (2) adds
-     *  Nautilus Shell — so climbing the rod ladder is self-sufficient end to end, ordered
-     *  to match crafting progression. Purely additive, never replaces the normal catch. */
+     *  holding it — Angler's Line (1) adds Prismarine Crystals and Turtle Scute (Angler's
+     *  armor's own ingredient, previously breeding-only), Deep-Sea Rod (2) adds Nautilus
+     *  Shell — so climbing the rod ladder is self-sufficient end to end, ordered to match
+     *  crafting progression. Purely additive, never replaces the normal catch. */
     private static void rollBonusFishingMaterials(ServerLevel level, int rodTier, List<ItemStack> drops) {
         RandomSource random = level.getRandom();
 
@@ -172,6 +176,11 @@ public final class SeaCreatureHandler {
             float crystalChance = rodTier == 1 ? 0.08F : rodTier == 2 ? 0.15F : 0.20F;
             if (random.nextFloat() < crystalChance) {
                 drops.add(new ItemStack(Items.PRISMARINE_CRYSTALS, 1 + random.nextInt(2)));
+            }
+
+            float scuteChance = rodTier == 1 ? 0.06F : rodTier == 2 ? 0.10F : 0.12F;
+            if (random.nextFloat() < scuteChance) {
+                drops.add(new ItemStack(Items.TURTLE_SCUTE, 1));
             }
         }
 
@@ -306,9 +315,35 @@ public final class SeaCreatureHandler {
             mob.setPersistenceRequired();
             mob.setAttached(MARKER, creature.name());
             level.addFreshEntity(mob);
+            pullTowardAngler(level, mob, pos, player);
         }
 
         player.sendSystemMessage(Component.literal("A " + creature.displayName + " surfaces!"));
+    }
+
+    /** SkyBlock-style "reel it in" (user-requested — "it needs to pull the mob in... not
+     *  just spawn in at the bobber"): a single strong shove from the bobber toward the
+     *  angler rather than a scripted multi-tick tween, so it works uniformly across every
+     *  creature type here (swimmers, walkers, the Elder-Guardian-based Abyssal Warden)
+     *  without hand-tuning a physics arc per mob — the mob's own AI/gravity carries it the
+     *  rest of the way in, same as any other knockback impulse. Splash particles trace the
+     *  path so the pull reads clearly even over the ~1-2 tick the impulse itself takes. */
+    private static void pullTowardAngler(ServerLevel level, Mob mob, Vec3 from, Player player) {
+        Vec3 toPlayer = player.position().subtract(from);
+        double horizontalDist = Math.sqrt(toPlayer.x * toPlayer.x + toPlayer.z * toPlayer.z);
+        Vec3 direction = horizontalDist > 0.001
+                ? new Vec3(toPlayer.x / horizontalDist, 0.0, toPlayer.z / horizontalDist)
+                : new Vec3(0.0, 0.0, 0.0);
+        mob.setDeltaMovement(direction.scale(1.1).add(0.0, 0.45, 0.0));
+        mob.hurtMarked = true;
+
+        for (int i = 1; i <= 6; i++) {
+            double t = i / 6.0;
+            Vec3 along = from.add(toPlayer.scale(t * 0.6));
+            level.sendParticles(ParticleTypes.SPLASH, along.x, along.y + 0.2, along.z, 3, 0.15, 0.1, 0.15, 0.02);
+        }
+        level.playSound(null, from.x, from.y, from.z, SoundEvents.FISHING_BOBBER_SPLASH,
+                SoundSource.PLAYERS, 1.0F, 0.9F + level.getRandom().nextFloat() * 0.2F);
     }
 
     // --- Death drops ---

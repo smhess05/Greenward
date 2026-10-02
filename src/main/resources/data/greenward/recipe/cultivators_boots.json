@@ -1,14 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "   ",
-    "W W",
-    "P P"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:harvesters_boots",
+    "greenward:wheat_bale",
+    "greenward:wheat_bale",
+    "greenward:wheat_bale",
+    "greenward:potato_sack",
+    "greenward:potato_sack"
   ],
-  "key": {
-    "W": "greenward:wheat_bale",
-    "P": "greenward:potato_sack"
-  },
   "result": {
     "id": "greenward:cultivators_boots",
     "count": 1

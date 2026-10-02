@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "greenward:item/scorched_leviathan_rod"
-  }
+  "parent": "minecraft:item/fishing_rod"
 }

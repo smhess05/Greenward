@@ -2,24 +2,30 @@ package com.green.ward;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * MIGRATION SHIM ONLY — kept registered purely so a world containing this block from
- * before the Permanence Retrofit doesn't have it turn to air on load (Permanence
- * Charter § 1.1: a missing block registration becomes air on the next chunk load).
- * Nothing ever places this block anymore; {@code Greenward}'s fertilizer-use handler
- * now writes straight to {@link FertilizedFarmlandData} instead. Any surviving instance
- * converts itself to real {@code minecraft:farmland} (moisture preserved) plus a
- * {@link FertilizedFarmlandData} record the moment it's random-ticked — the same cadence
- * vanilla farmland itself already ticks on, so this self-heals within normal play without
- * a dedicated chunk-scan pass. {@code /greenward decommission} sweeps any stragglers
- * immediately. Safe to delete this class entirely in a future update once enough time
- * has passed that no unconverted world is expected to remain.
+ * The real, visible block {@code Greenward}'s fertilizer-use handler swaps farmland to
+ * (user-requested — fertilizing should "switch the blockstate to the fertilized farmland
+ * and the texture," permanently, not just an invisible data record with a chat message).
+ * A plain {@link FarmlandBlock} subclass with no behavior overrides of its own, so it
+ * inherits vanilla farmland's hydration/crop-growth/trampling exactly — only its
+ * blockstate (own dry/wet textures, see {@code assets/greenward/blockstates/
+ * fertilized_farmland.json}) and its identity (read by {@link HarvestLogic} via {@link
+ * FertilizedFarmlandData}, which the fertilizer handler still also writes to as a
+ * belt-and-suspenders record) differ from real farmland.
+ *
+ * <p>An earlier version of this class auto-converted itself back to vanilla farmland on
+ * every random tick, framed as a "Permanence Charter" migration shim — that undermined
+ * the entire point of a persistent custom block, converting away before a player could
+ * ever really see the texture. That auto-revert is gone; {@code /greenward decommission}
+ * (which already knows how to convert this block, via {@link #convertToVanilla}) is the
+ * project's real, existing, user-initiated answer to "make my world safe before removing
+ * the mod" — the same mechanism every other Greenward block already relies on, not a
+ * silent per-tick self-destruct unique to this one.
  */
 public class FertilizedFarmlandBlock extends FarmlandBlock {
 
@@ -27,11 +33,8 @@ public class FertilizedFarmlandBlock extends FarmlandBlock {
         super(properties);
     }
 
-    @Override
-    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        convertToVanilla(level, pos, state);
-    }
-
+    /** Used by {@code /greenward decommission} to convert this block to vanilla farmland
+     *  (moisture preserved) before the mod is removed — see the class doc above. */
     public static void convertToVanilla(ServerLevel level, BlockPos pos, BlockState state) {
         int moisture = state.getValue(MOISTURE);
         level.setBlockAndUpdate(pos, Blocks.FARMLAND.defaultBlockState().setValue(MOISTURE, moisture));

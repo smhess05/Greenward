@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:barbed_trident",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals",
+    "minecraft:nautilus_shell"
+  ],
+  "result": {
+    "id": "greenward:tidal_trident",
+    "count": 1
+  }
+}

@@ -71,10 +71,14 @@ public final class ModArmorMaterials {
             15, ZERO, 9, SoundEvents.ARMOR_EQUIP_IRON,
             0.0F, 0.0F, REPAIRS_PROSPECTORS_PLATE, EquipmentAssets.IRON);
 
-    /** Fishing Tier I: turtle-scute-durability. Defense stat total 100 (cap15/coat40/waders30/fins15, each a multiple of 5). */
+    /** Fishing Tier I: turtle-scute-durability. Defense stat total 100 (cap15/coat40/waders30/fins15, each a multiple of 5).
+     *  Visually copper (user-requested tier palette: copper -> iron -> gold) — previously
+     *  {@code EquipmentAssets.TURTLE_SCUTE}, a real bug: that equipment asset only defines
+     *  a helmet layer (vanilla never has turtle-scute chest/legs/boots), so every Angler's
+     *  piece except the cap rendered with no worn texture at all, inventory icon aside. */
     public static final ArmorMaterial ANGLERS_WEAR = new ArmorMaterial(
-            25, ZERO, 9, SoundEvents.ARMOR_EQUIP_TURTLE,
-            0.0F, 0.0F, REPAIRS_ANGLERS_WEAR, EquipmentAssets.TURTLE_SCUTE);
+            25, ZERO, 9, SoundEvents.ARMOR_EQUIP_COPPER,
+            0.0F, 0.0F, REPAIRS_ANGLERS_WEAR, EquipmentAssets.COPPER);
 
     // --- Four Pillars Progression: Farming Tier II / Tier III ---
 
@@ -119,16 +123,35 @@ public final class ModArmorMaterials {
     public static final TagKey<Item> REPAIRS_LEVIATHANS_WEAR =
             TagKey.create(net.minecraft.core.registries.Registries.ITEM, Identifier.fromNamespaceAndPath(ModItems.MOD_ID, "repairs_leviathans_wear"));
 
-    /** Fishing Tier II. Defense stat total 225 (cap35/coat90/waders65/fins35, each a multiple of 5), mirrors Cultivator's Garb. */
+    /** Fishing Tier II. Defense stat total 225 (cap35/coat90/waders65/fins35, each a multiple of 5), mirrors Cultivator's Garb.
+     *  Visually iron (user-requested tier palette: copper -> iron -> gold). */
     public static final ArmorMaterial TIDAL_WEAR = new ArmorMaterial(
-            33, ZERO, 10, SoundEvents.ARMOR_EQUIP_DIAMOND,
-            0.0F, 0.0F, REPAIRS_TIDAL_WEAR, EquipmentAssets.DIAMOND);
+            33, ZERO, 10, SoundEvents.ARMOR_EQUIP_IRON,
+            0.0F, 0.0F, REPAIRS_TIDAL_WEAR, EquipmentAssets.IRON);
 
     /** Fishing Tier III, smithing-upgraded from Tidal Wear. Defense stat total 350
-     *  (cap60/coat130/waders100/fins60, each a multiple of 5) — same ceiling as every other pillar's Tier III. */
+     *  (cap60/coat130/waders100/fins60, each a multiple of 5) — same ceiling as every other pillar's Tier III.
+     *  Visually gold (user-requested tier palette: copper -> iron -> gold). */
     public static final ArmorMaterial LEVIATHANS_WEAR = new ArmorMaterial(
-            45, ZERO, 15, SoundEvents.ARMOR_EQUIP_NETHERITE,
-            0.0F, 0.0F, REPAIRS_LEVIATHANS_WEAR, EquipmentAssets.NETHERITE);
+            45, ZERO, 15, SoundEvents.ARMOR_EQUIP_GOLD,
+            0.0F, 0.0F, REPAIRS_LEVIATHANS_WEAR, EquipmentAssets.GOLD);
+
+    /** User-requested — the fishing helmets specifically go back to the Turtle Shell's
+     *  own head geometry/look (the copper/iron/gold swap above was for the body/legs/
+     *  boots slots only, fixing a real missing-texture bug; the helmet slot was never
+     *  broken under {@code TURTLE_SCUTE} — that asset's only defined layer IS the helmet
+     *  one). Same stats as each tier's own {@code *_WEAR} material, just the equipment
+     *  asset swapped back — one shared material per tier since "for all tiers" means the
+     *  turtle-shell look itself, not a tier-colored variant of it. */
+    public static final ArmorMaterial ANGLERS_WEAR_HELM = new ArmorMaterial(
+            25, ZERO, 9, SoundEvents.ARMOR_EQUIP_TURTLE,
+            0.0F, 0.0F, REPAIRS_ANGLERS_WEAR, EquipmentAssets.TURTLE_SCUTE);
+    public static final ArmorMaterial TIDAL_WEAR_HELM = new ArmorMaterial(
+            33, ZERO, 10, SoundEvents.ARMOR_EQUIP_TURTLE,
+            0.0F, 0.0F, REPAIRS_TIDAL_WEAR, EquipmentAssets.TURTLE_SCUTE);
+    public static final ArmorMaterial LEVIATHANS_WEAR_HELM = new ArmorMaterial(
+            45, ZERO, 15, SoundEvents.ARMOR_EQUIP_TURTLE,
+            0.0F, 0.0F, REPAIRS_LEVIATHANS_WEAR, EquipmentAssets.TURTLE_SCUTE);
 
     // --- Four Pillars Progression: Combat Tier I / II / III (no pre-existing Tier I to build on) ---
 
