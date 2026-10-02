@@ -1,15 +1,11 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "RP ",
-    " S ",
-    " S "
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:marrowguard_blade",
+    "greenward:bone_reliquary",
+    "greenward:powder_satchel",
+    "greenward:powder_satchel"
   ],
-  "key": {
-    "R": "greenward:bone_reliquary",
-    "P": "greenward:powder_satchel",
-    "S": "minecraft:stick"
-  },
   "result": {
     "id": "greenward:ashwrought_edge",
     "count": 1

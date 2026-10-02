@@ -7,6 +7,7 @@
   "authors": ["Sawyer"],
   "license": "MIT",
   "environment": "*",
+  "mixins": ["greenward.mixins.json"],
   "entrypoints": {
     "main": ["com.green.ward.Greenward"],
     "client": ["com.green.ward.GreenwardClient"]

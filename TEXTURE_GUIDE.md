@@ -58,8 +58,8 @@ item, tiers 2–3 → netherite-tier). The mapping as of this pass:
 
 | Greenward item | Vanilla placeholder |
 |---|---|
-| Harvester's Scythe | `diamond_hoe` |
-| Cultivator's Scythe / Harvest Warden | `netherite_hoe` |
+| Harvester's Scythe | *(own texture, `handheld`)* |
+| Cultivator's Scythe / Harvest Warden | *(own texture, `handheld`)* |
 | Prospector's Drill | `diamond_pickaxe` |
 | Excavator's Pick / Bedrock Reaver | `netherite_pickaxe` |
 | Marrowguard Blade / Voidstep Blade | `diamond_sword` |

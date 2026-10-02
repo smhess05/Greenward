@@ -1,14 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "   ",
-    "C C",
-    "K K"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:anglers_fins",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block"
   ],
-  "key": {
-    "C": "greenward:cod_shoal",
-    "K": "minecraft:dried_kelp_block"
-  },
   "result": {
     "id": "greenward:tidal_fins",
     "count": 1

@@ -1,13 +1,14 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "CCC",
-    "C C",
-    "   "
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:anglers_cap",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block"
   ],
-  "key": {
-    "C": "greenward:cod_shoal"
-  },
   "result": {
     "id": "greenward:tidal_cap",
     "count": 1
