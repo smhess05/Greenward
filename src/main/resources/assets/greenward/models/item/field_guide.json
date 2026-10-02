@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "greenward:item/field_guide"
+    "layer0": "minecraft:item/book"
   }
 }
