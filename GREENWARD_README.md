@@ -1784,3 +1784,20 @@ tried and asked to be made more discoverable. Waystones give Coins a fast-travel
 priced by distance, and Slayers — summon-a-boss quests reusing The Marked's own five
 vanilla mob types — pay Coins, a guaranteed drop, and Combat XP for a real melee/ranged
 kill. Full numbers in `PROGRESSION_SUMMARY.md` § 14.
+
+## Fishing rod fix, tier upgrades, and a fishing weapon line
+
+Custom fishing rods were fundamentally broken — casting one spawned a bobber that vanished
+instantly, never threw a line. Root cause was a hardcoded vanilla check deep inside
+`FishingHook` that only ever recognized the literal vanilla Fishing Rod; fixed with the
+mod's first mixin, which broadens that one check to any fishing rod. Also fixed: every
+pillar's tier-1→2 recipe (Mining, Fishing, Farming, Combat) let you skip straight to tier
+2 without ever crafting tier 1 — now all require the tier-1 item, like tier 2→3 already
+did. Fishing armor now grants Sea Creature Chance like Farming/Mining armor grants their
+own Fortune. Farming's and Mining's top-tier tools now reach the same netherite-and-a-
+little-past damage ceiling Combat's Reaper's Edge already had. Sea creatures now visibly
+get reeled toward you instead of just appearing at the bobber. And Fishing has its own
+weapon line now: three tridents paired with the rod tiers, the final one (Leviathan's
+Trident) needing a real Abyssal Warden drop to craft and carrying its own sneak-right-click
+ability, Riptide Slash — a 6-block arc of damage with a splash-particle trail. Full
+numbers and reasoning in `PROGRESSION_SUMMARY.md` § 16.

@@ -4,8 +4,10 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
@@ -49,6 +51,10 @@ final class GreenwardTooltipRenderer {
 
         if (stats == null && rarity == null && satchel == null && miningSpeed == null && damage == null) {
             return;
+        }
+
+        if (damage != null) {
+            removeVanillaAttackDamageLine(lines);
         }
 
         if (satchel != null) {
@@ -98,9 +104,12 @@ final class GreenwardTooltipRenderer {
         return best > 0.0F ? best : null;
     }
 
-    /** The item's own Attack Damage attribute bonus — the exact number vanilla's own
-     *  default tooltip already derives its "+X Attack Damage" line from, just re-rendered
-     *  in Greenward's own style so every tool reads consistently in one place. */
+    /** The item's own raw Attack Damage attribute bonus — the weapon's real contribution,
+     *  not folded together with the player's own bare-fist baseline the way vanilla's own
+     *  tooltip line does (see {@code ItemAttributeModifiers.Display.Default.apply}'s
+     *  {@code displayWithBase} branch, which adds the attribute's default value of 1.0
+     *  when the modifier carries {@link Item#BASE_ATTACK_DAMAGE_ID}) — that convention is
+     *  vanilla's own and not what this line is for. */
     private static Float attackDamageBonus(ItemStack stack) {
         ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
         if (modifiers == null) {
@@ -112,6 +121,57 @@ final class GreenwardTooltipRenderer {
             }
         }
         return null;
+    }
+
+    /** Vanilla's own default tooltip (already built by the time this callback runs) prints
+     *  its own "+X Attack Damage" line for any weapon/tool carrying a base-attack-damage
+     *  modifier — the same stat the line above now shows. Rather than print it twice,
+     *  strip vanilla's own copy and let the line above be the only one — found by content
+     *  rather than position. Vanilla renders this two different ways depending on whether
+     *  a live player was available to fold the base value in ({@code displayWithBase}):
+     *  a plain top-level translatable ("+X Attack Damage") when there's no player, or a
+     *  space-then-append-wrapped one ("X Attack Damage") when there is — the translatable
+     *  actually naming the attribute can be the line's own contents OR buried a level down
+     *  in a sibling, so this walks both. */
+    private static void removeVanillaAttackDamageLine(List<Component> lines) {
+        String attackDamageId = Attributes.ATTACK_DAMAGE.value().getDescriptionId();
+        lines.removeIf(line -> isAttributeModifierLineFor(line, attackDamageId));
+    }
+
+    private static boolean isAttributeModifierLineFor(Component component, String attributeDescriptionId) {
+        if (component.getContents() instanceof TranslatableContents translatable
+                && translatable.getKey().startsWith("attribute.modifier.")
+                && hasAttributeArg(translatable, attributeDescriptionId)) {
+            return true;
+        }
+        for (Component sibling : component.getSiblings()) {
+            if (isAttributeModifierLineFor(sibling, attributeDescriptionId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasAttributeArg(TranslatableContents translatable, String attributeDescriptionId) {
+        for (Object arg : translatable.getArgs()) {
+            if (arg instanceof Component argComponent && componentNames(argComponent, attributeDescriptionId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean componentNames(Component component, String translationKey) {
+        if (component.getContents() instanceof TranslatableContents translatable
+                && translatable.getKey().equals(translationKey)) {
+            return true;
+        }
+        for (Component sibling : component.getSiblings()) {
+            if (componentNames(sibling, translationKey)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static String trim(float value) {

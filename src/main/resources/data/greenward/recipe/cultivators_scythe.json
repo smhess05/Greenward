@@ -1,15 +1,10 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "WPW",
-    " R ",
-    " R "
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:harvesters_scythe",
+    "greenward:wheat_bale",
+    "greenward:potato_sack"
   ],
-  "key": {
-    "W": "greenward:wheat_bale",
-    "P": "greenward:potato_sack",
-    "R": "minecraft:stick"
-  },
   "result": {
     "id": "greenward:cultivators_scythe",
     "count": 1

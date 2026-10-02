@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "greenward:item/cultivators_scythe"
-  }
+  "parent": "minecraft:item/netherite_hoe"
 }

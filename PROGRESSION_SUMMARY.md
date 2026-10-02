@@ -985,7 +985,160 @@ vanilla tool would be pure clutter rather than real information.
 
 ---
 
-## 16. Open items / known caveats for review
+## 16. Fishing rod fix, tooltip fix, and a tier/damage/fishing-weapon pass
+
+**The real fishing rod bug** (user-reported — casting Angler's Line/Deep-Sea Rod/
+Leviathan Rod spawned a bobber with no momentum that vanished within a tick, never threw,
+never lost durability): traced all the way into vanilla's own `FishingHook.
+shouldStopFishing(Player)`, a private method run every tick that checks `heldItem.is(
+Items.FISHING_ROD)` — item *identity*, not type — and discards the hook the instant
+that's false. Any modded `FishingRodItem` fails this check every time, self-destructing
+on its own first tick. No Fabric event, tag, or data-driven hook reaches this; the mod's
+first (and so far only) mixin (`mixin/FishingHookMixin.java`, `greenward.mixins.json`)
+broadens the check to "is any `FishingRodItem`," vanilla's own rod included, unchanged.
+(A dead end tried first and reverted: the rods' baked-in Lure/Luck of the Sea enchantments
+looked like the most likely remaining difference from vanilla's registration — removed
+entirely, confirmed by the user it didn't fix anything, before the real cause was found.)
+
+**Damage tooltip fix**: the new "❁ Damage: +X" line (§ 15) was off by exactly the
+player's own bare-fist baseline (1.0) from vanilla's native "+X Attack Damage" line, and
+a first attempt to fix it by matching vanilla's math was itself wrong — vanilla only
+folds that baseline in when a live player context reaches its renderer, which doesn't
+hold everywhere the line is compared against. Reverted to the tool's raw bonus (no
+baseline folded in) and fixed the vanilla-line removal to also match the "wrapped"
+component shape vanilla renders in that live-player case (a nested sibling component, not
+the line's own top-level content) — previously only the unwrapped shape was ever matched,
+so the native line still doubled up in exactly that context.
+
+**Tier 1→2 recipes skipped tier 1** (user-reported, confirmed by reading the actual
+recipe JSONs): `excavators_pick`/`excavators_helm/plate/greaves/treads` (Mining),
+`tidal_cap/coat/waders/fins` (Fishing), `cultivators_hat/tunic/leggings/boots` (Farming),
+and `ashwrought_edge` (Combat) were all plain material recipes with no tier-1 item
+required — tier 2→3 already did this correctly via `smithing_transform`. All 14 rewritten
+shapeless, each now consuming its tier-1 predecessor plus its existing flavor materials
+(bumped up somewhat so tier 2 reads as clearly more expensive, not cheaper).
+
+**Fishing armor had zero stats**: Angler's/Tidal's/Leviathan's pieces passed no stat at
+all to `piece(...)`, unlike Farming/Mining's Fortune-per-piece. Now grant Sea Creature
+Chance per piece off the same `FORTUNE_TIER_I/II/III` arrays the other two pillars use
+(3/3/3/3 → 6/7/6/6 → 15/15/15/15).
+
+**Farming/Mining top tools didn't reach Combat's own damage ceiling** (user-requested —
+"final tier weapon of each skill should be around netherite tier, maybe a little better"):
+Combat's own doc comments already claimed Reaper's Edge "matches every other pillar's
+Tier III ceiling," but that was aspirational — Harvest Warden (a hoe, baseline -3.0) sat
+at 1 total Attack Damage across all three tiers with zero progression, and Bedrock Reaver
+(a pickaxe, baseline 1.0) capped at 6 (netherite-*pickaxe* tier, not sword tier). Raised
+both lines onto Combat's exact 7 → 8 → 9 curve (diamond-equivalent → netherite-equivalent
+→ a little past netherite) by giving Scythes/Pickaxes a sword-style 3.0 damage baseline
+and scaling each `ToolMaterial`'s own attack-damage-bonus field per tier (3.0/4.0/5.0,
+identical progression to Combat's own materials).
+
+**Sea creatures now pull toward the angler** (user-requested — SkyBlock-style, "not just
+spawn in at the bobber"): `SeaCreatureHandler.pullTowardAngler` gives the freshly-spawned
+mob a single strong shove toward the player (not a scripted multi-tick tween, so it works
+uniformly across swimmers, walkers, and the Elder-Guardian-based Abyssal Warden without a
+hand-tuned physics arc per mob type) plus a trail of splash particles and a splash sound
+along the path, so the pull reads clearly even though the impulse itself is instant.
+
+**Turtle Scute is now fishable** (user-requested) — folded into the rod-tier bootstrap
+table above, gated the same way Prismarine Crystals is (needs Angler's Line held): 6% at
+tier 1, 10% at tier 2, 12% at tier 3.
+
+**A new Fishing-pillar weapon line** (user-requested — "along with each tier of the
+fishing progression... there should be a weapon that is obtainable," paired with the rod
+tiers): three tridents, same 7 → 8 → 9 Attack Damage curve as every other pillar's Tier
+III ceiling (tridents have no `ToolMaterial` to hang a per-tier value off — vanilla's own
+is a fixed `ItemAttributeModifiers`, so `ModTools.tridentAttributes(float)` builds the
+per-tier equivalent by hand) and the same Strength progression Combat's swords use
+(+10 / +20 / +35 +15 Crit Damage):
+
+| Trident | Obtained via | Attack Damage | Stats |
+|---|---|---|---|
+| Barbed Trident | Shapeless: vanilla Trident + 3 Prismarine Shard | 7 | +10 Strength |
+| Tidal Trident | Shapeless: Barbed Trident + 4 Prismarine Crystals + Nautilus Shell | 8 | +20 Strength, 2 sockets |
+| Leviathan's Trident | Smithing: Tidal Trident + Ascension Template + Leviathan's Heart | 9 | +35 Strength, +15 Crit Damage, 3 sockets |
+
+Leviathan's Heart is itself crafted from Cod Shoal + Kelp Reef + a real Heart of the Sea
+— an Abyssal Warden drop requiring the Leviathan Rod to catch at all — satisfying the
+user's "a rare drop with the final fishing rod's sea creature should be needed to craft
+the final weapon" via the same ingredient the armor line's own Tier III upgrade already
+uses, rather than inventing a second rare-drop item.
+
+Leviathan's Trident also gets **Riptide Slash** (`TridentAbilityHandler`, new file):
+sneak + right-click deals 12 damage (further scaled by the wielder's own Strength/Crit
+via the existing `GreenwardDamageHandler` pipeline, since the damage source is a normal
+player attack) to every living entity within a 6-block, ~130°-wide cone in front of the
+player, with a fan of splash particles and a Riptide sound tracing the arc. 120s cooldown,
+matching every other pillar's ability. Plain right-click is deliberately left untouched —
+vanilla's own `TridentItem.use()`/`releaseUsing()` have no item-identity checks (unlike
+the fishing rod bug above), so the mod's three tridents charge-and-throw exactly like a
+real one; the ability only ever intercepts the sneaking case and `PASS`es otherwise.
+
+**New textures**: the three fishing rods (plus the Lava rod) were redrawn as a simple
+diagonal rod-and-line silhouette with a tier-colored tip glow, loosely inspired by (not
+copied from) a Hypixel SkyBlock texture pack the user shared as a style reference; the
+three new tridents follow the same diagonal-shaft-and-head language in matching palettes.
+
+---
+
+## 17. Fertilizer fix (two passes)
+
+**User-reported**: right-clicking farmland with Fertilizer consumed it and "did nothing,"
+and the same tile could be clicked (and re-consumed) endlessly. First pass: the
+underlying `FertilizedFarmlandData` persistence and its read side (a guaranteed
+double-drop on the tile's next player harvest, in `HarvestLogic.harvestAndReplant`) were
+both already correct — the actual bugs were (1) no guard against re-fertilizing an
+already-fertilized tile, so every click just silently ate another item for zero
+additional effect, and (2) zero feedback on a real, working application, since
+fertilizing was (at the time) deliberately invisible on the block itself. Fixed with a
+real "already fertilized" check plus a chat message and particles/sound on success.
+
+**Second pass** (user follow-up — this should be a real, permanent, visible block swap
+using the Fertilized Farmland textures/blockstate that already existed in
+`assets/greenward`, not a chat message standing in for feedback): turned out
+`FertilizedFarmlandBlock` was a real, fully-built block — dry/wet blockstate variants,
+its own textures, extends `FarmlandBlock` so it inherits vanilla's hydration/growth/
+trampling for free — but an earlier pass had turned it into a "migration shim" that
+silently converted itself back to plain vanilla farmland on every random tick, framed as
+Permanence-Charter safety. That undermined the entire point of a persistent custom
+block — it would revert before a player could ever really see the texture, which is
+exactly what "consumed and does nothing" looked like. The project already has a real,
+user-initiated answer to mod-removal safety (`/greenward decommission`, which already
+knew how to convert this exact block) — the same mechanism every other Greenward block
+already relies on — so the auto-revert was both redundant and actively counterproductive.
+Removed it. The fertilizer handler now swaps the real block (moisture forced to max, so
+the wet/hydrated texture shows immediately) instead of writing invisible side-data;
+`FertilizedFarmlandData` is still written alongside it as a belt-and-suspenders record for
+`HarvestLogic`'s own check, but the block itself is now the primary, permanent,
+visible source of truth — and the "already fertilized?" check is now just "is the block
+already `FERTILIZED_FARMLAND`," no data lookup needed.
+
+Flagged but not changed: the fertilized bonus (like Farming Fortune) only ever applies
+through the mod's own right-click-with-a-hoe harvest gesture (`Greenward.java`'s
+`HoeItem` `UseBlockCallback`, which works with vanilla hoes too, not just Greenward's
+Scythes) — a crop broken the plain vanilla way (left-click mining) never reaches
+`HarvestLogic` at all, so fertilizing has no observable yield effect on tiles farmed that
+way, even though the block itself now correctly shows as fertilized either way.
+
+---
+
+## 18. Angler's Wear invisible-when-worn bug, and a tier material palette
+
+**User-reported**: every Angler's Wear piece except the cap had no texture when actually
+worn, inventory icon aside. Root cause: `ANGLERS_WEAR`'s `ArmorMaterial` pointed at
+`EquipmentAssets.TURTLE_SCUTE` — a real vanilla equipment asset, but one that only ever
+defines a *helmet* layer (vanilla turtle armor has no chest/legs/boots counterpart), so
+every other slot silently rendered with nothing. Also folded in a user-requested visual
+pass: Fishing's three tiers now visually read as copper -> iron -> gold (`ANGLERS_WEAR`
+-> `EquipmentAssets.COPPER`, `TIDAL_WEAR` -> `IRON`, `LEVIATHANS_WEAR` -> `GOLD`, was
+`TURTLE_SCUTE`/`DIAMOND`/`NETHERITE`), each with its matching equip sound. Checked every
+other `ArmorMaterial` in `ModArmorMaterials.java` for the same narrow-asset mistake —
+none of the others use a helmet-only asset, this was isolated to Angler's Wear.
+
+---
+
+## 19. Open items / known caveats for review
 
 - **Not independently verified in this environment**: any actual gameplay feel (RCON
   can drive server-side block-entity state, brewing, and item-give commands, but not a

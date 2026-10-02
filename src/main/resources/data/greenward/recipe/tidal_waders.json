@@ -1,14 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "CKC",
-    "C C",
-    "C C"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "greenward:anglers_waders",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "greenward:cod_shoal",
+    "minecraft:dried_kelp_block",
+    "minecraft:dried_kelp_block"
   ],
-  "key": {
-    "C": "greenward:cod_shoal",
-    "K": "minecraft:dried_kelp_block"
-  },
   "result": {
     "id": "greenward:tidal_waders",
     "count": 1

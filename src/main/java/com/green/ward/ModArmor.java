@@ -99,10 +99,10 @@ public final class ModArmor {
             PROSPECTORS_GREAVES = piece("prospectors_greaves", ModArmorMaterials.PROSPECTORS_PLATE, ArmorType.LEGGINGS, 40, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_I[2]));
             PROSPECTORS_TREADS = piece("prospectors_treads", ModArmorMaterials.PROSPECTORS_PLATE, ArmorType.BOOTS, 25, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.MINING_FORTUNE, FORTUNE_TIER_I[3]));
 
-            ANGLERS_CAP = piece("anglers_cap", ModArmorMaterials.ANGLERS_WEAR, ArmorType.HELMET, 15, GreenwardRarity.UNCOMMON);
-            ANGLERS_COAT = piece("anglers_coat", ModArmorMaterials.ANGLERS_WEAR, ArmorType.CHESTPLATE, 40, GreenwardRarity.UNCOMMON);
-            ANGLERS_WADERS = piece("anglers_waders", ModArmorMaterials.ANGLERS_WEAR, ArmorType.LEGGINGS, 30, GreenwardRarity.UNCOMMON);
-            ANGLERS_FINS = piece("anglers_fins", ModArmorMaterials.ANGLERS_WEAR, ArmorType.BOOTS, 15, GreenwardRarity.UNCOMMON);
+            ANGLERS_CAP = piece("anglers_cap", ModArmorMaterials.ANGLERS_WEAR_HELM, ArmorType.HELMET, 15, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_I[0]));
+            ANGLERS_COAT = piece("anglers_coat", ModArmorMaterials.ANGLERS_WEAR, ArmorType.CHESTPLATE, 40, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_I[1]));
+            ANGLERS_WADERS = piece("anglers_waders", ModArmorMaterials.ANGLERS_WEAR, ArmorType.LEGGINGS, 30, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_I[2]));
+            ANGLERS_FINS = piece("anglers_fins", ModArmorMaterials.ANGLERS_WEAR, ArmorType.BOOTS, 15, GreenwardRarity.UNCOMMON, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_I[3]));
         }
 
         if (GreenwardConfig.ENABLE_FARMING_PROGRESSION) {
@@ -135,16 +135,16 @@ public final class ModArmor {
         }
 
         if (GreenwardConfig.ENABLE_FISHING_PROGRESSION) {
-            TIDAL_CAP = piece("tidal_cap", ModArmorMaterials.TIDAL_WEAR, ArmorType.HELMET, 35, GreenwardRarity.RARE, 2);
-            TIDAL_COAT = piece("tidal_coat", ModArmorMaterials.TIDAL_WEAR, ArmorType.CHESTPLATE, 90, GreenwardRarity.RARE, 2);
-            TIDAL_WADERS = piece("tidal_waders", ModArmorMaterials.TIDAL_WEAR, ArmorType.LEGGINGS, 65, GreenwardRarity.RARE, 2);
-            TIDAL_FINS = piece("tidal_fins", ModArmorMaterials.TIDAL_WEAR, ArmorType.BOOTS, 35, GreenwardRarity.RARE, 2);
+            TIDAL_CAP = piece("tidal_cap", ModArmorMaterials.TIDAL_WEAR_HELM, ArmorType.HELMET, 35, GreenwardRarity.RARE, 2, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_II[0]));
+            TIDAL_COAT = piece("tidal_coat", ModArmorMaterials.TIDAL_WEAR, ArmorType.CHESTPLATE, 90, GreenwardRarity.RARE, 2, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_II[1]));
+            TIDAL_WADERS = piece("tidal_waders", ModArmorMaterials.TIDAL_WEAR, ArmorType.LEGGINGS, 65, GreenwardRarity.RARE, 2, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_II[2]));
+            TIDAL_FINS = piece("tidal_fins", ModArmorMaterials.TIDAL_WEAR, ArmorType.BOOTS, 35, GreenwardRarity.RARE, 2, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_II[3]));
 
             // Obtained via smithing_transform (Tidal piece + Ascension Template + Leviathan's Heart).
-            LEVIATHANS_CAP = piece("leviathans_cap", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.HELMET, 60, GreenwardRarity.EPIC, 3);
-            LEVIATHANS_COAT = piece("leviathans_coat", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.CHESTPLATE, 130, GreenwardRarity.EPIC, 3);
-            LEVIATHANS_WADERS = piece("leviathans_waders", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.LEGGINGS, 100, GreenwardRarity.EPIC, 3);
-            LEVIATHANS_FINS = piece("leviathans_fins", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.BOOTS, 60, GreenwardRarity.EPIC, 3);
+            LEVIATHANS_CAP = piece("leviathans_cap", ModArmorMaterials.LEVIATHANS_WEAR_HELM, ArmorType.HELMET, 60, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_III[0]));
+            LEVIATHANS_COAT = piece("leviathans_coat", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.CHESTPLATE, 130, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_III[1]));
+            LEVIATHANS_WADERS = piece("leviathans_waders", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.LEGGINGS, 100, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_III[2]));
+            LEVIATHANS_FINS = piece("leviathans_fins", ModArmorMaterials.LEVIATHANS_WEAR, ArmorType.BOOTS, 60, GreenwardRarity.EPIC, 3, fortune(GreenwardStat.SEA_CREATURE_CHANCE, FORTUNE_TIER_III[3]));
         }
 
         if (GreenwardConfig.ENABLE_COMBAT_PROGRESSION) {
